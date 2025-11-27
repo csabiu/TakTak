@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TakTak</string>
+    <string name="recipes">Recipes</string>
+    <string name="batches">Batches</string>
+    <string name="journal">Journal</string>
+    <string name="tastings">Tastings</string>
+    <string name="add_recipe">Add Recipe</string>
+    <string name="add_batch">Add Batch</string>
+    <string name="add_journal_entry">Add Journal Entry</string>
+    <string name="add_tasting_note">Add Tasting Note</string>
+    <string name="recipe_name">Recipe Name</string>
+    <string name="description">Description</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="instructions">Instructions</string>
+    <string name="fermentation_time">Fermentation Time (days)</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="batch_name">Batch Name</string>
+    <string name="start_date">Start Date</string>
+    <string name="status">Status</string>
+    <string name="notes">Notes</string>
+    <string name="tasting_date">Tasting Date</string>
+    <string name="appearance">Appearance</string>
+    <string name="aroma">Aroma</string>
+    <string name="taste">Taste</string>
+    <string name="mouthfeel">Mouthfeel</string>
+    <string name="overall_rating">Overall Rating</string>
+    <string name="entry_title">Entry Title</string>
+    <string name="entry_content">Entry Content</string>
+</resources>
