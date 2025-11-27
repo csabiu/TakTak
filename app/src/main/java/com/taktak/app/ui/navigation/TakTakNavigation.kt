@@ -17,6 +17,7 @@ import com.taktak.app.ui.screens.recipes.RecipeDetailScreen
 import com.taktak.app.ui.screens.recipes.AddEditRecipeScreen
 import com.taktak.app.ui.screens.tastings.TastingNoteListScreen
 import com.taktak.app.ui.screens.tastings.AddEditTastingNoteScreen
+import com.taktak.app.ui.screens.alarms.AddEditAlarmScreen
 
 @Composable
 fun TakTakNavigation(
@@ -100,6 +101,12 @@ fun TakTakNavigation(
                 },
                 onAddTastingNote = { id ->
                     navController.navigate(Screen.AddEditTastingNote.createRoute(batchId = id))
+                },
+                onAddAlarm = { id ->
+                    navController.navigate(Screen.AddEditAlarm.createRoute(batchId = id))
+                },
+                onEditAlarm = { alarmId ->
+                    navController.navigate(Screen.AddEditAlarm.createRoute(alarmId = alarmId))
                 }
             )
         }
@@ -173,6 +180,29 @@ fun TakTakNavigation(
             AddEditJournalScreen(
                 entryId = entryId,
                 repository = repository,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        // Alarms
+        composable(
+            route = Screen.AddEditAlarm.route,
+            arguments = listOf(
+                navArgument("alarmId") {
+                    type = NavType.LongType
+                    defaultValue = -1L
+                },
+                navArgument("batchId") {
+                    type = NavType.LongType
+                    defaultValue = -1L
+                }
+            )
+        ) { backStackEntry ->
+            val alarmId = backStackEntry.arguments?.getLong("alarmId")?.takeIf { it != -1L }
+            val batchId = backStackEntry.arguments?.getLong("batchId")?.takeIf { it != -1L }
+            AddEditAlarmScreen(
+                alarmId = alarmId,
+                batchId = batchId,
                 onNavigateBack = { navController.popBackStack() }
             )
         }

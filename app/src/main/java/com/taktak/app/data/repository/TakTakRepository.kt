@@ -8,7 +8,8 @@ class TakTakRepository(
     private val recipeDao: RecipeDao,
     private val batchDao: BatchDao,
     private val tastingNoteDao: TastingNoteDao,
-    private val journalEntryDao: JournalEntryDao
+    private val journalEntryDao: JournalEntryDao,
+    private val alarmDao: AlarmDao
 ) {
     // Recipe operations
     fun getAllRecipes(): Flow<List<Recipe>> = recipeDao.getAllRecipes()
@@ -42,4 +43,15 @@ class TakTakRepository(
     suspend fun insertJournalEntry(entry: JournalEntry): Long = journalEntryDao.insertJournalEntry(entry)
     suspend fun updateJournalEntry(entry: JournalEntry) = journalEntryDao.updateJournalEntry(entry)
     suspend fun deleteJournalEntry(entry: JournalEntry) = journalEntryDao.deleteJournalEntry(entry)
+
+    // Alarm operations
+    fun getAllAlarms(): Flow<List<AlarmItem>> = alarmDao.getAllAlarms()
+    suspend fun getAlarmById(id: Long): AlarmItem? = alarmDao.getAlarmById(id)
+    fun getAlarmsByBatch(batchId: Long): Flow<List<AlarmItem>> = alarmDao.getAlarmsByBatch(batchId)
+    fun getActiveAlarms(): Flow<List<AlarmItem>> = alarmDao.getActiveAlarms()
+    suspend fun insertAlarm(alarm: AlarmItem): Long = alarmDao.insertAlarm(alarm)
+    suspend fun updateAlarm(alarm: AlarmItem) = alarmDao.updateAlarm(alarm)
+    suspend fun deleteAlarm(alarm: AlarmItem) = alarmDao.deleteAlarm(alarm)
+    suspend fun deleteAlarmsByBatch(batchId: Long) = alarmDao.deleteAlarmsByBatch(batchId)
+    suspend fun markAlarmAsTriggered(alarmId: Long) = alarmDao.markAlarmAsTriggered(alarmId)
 }

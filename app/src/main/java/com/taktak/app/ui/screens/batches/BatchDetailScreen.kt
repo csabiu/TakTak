@@ -21,12 +21,15 @@ fun BatchDetailScreen(
     repository: TakTakRepository,
     onNavigateBack: () -> Unit,
     onEditBatch: (Long) -> Unit,
-    onAddTastingNote: (Long) -> Unit
+    onAddTastingNote: (Long) -> Unit,
+    onAddAlarm: (Long) -> Unit = {},
+    onEditAlarm: (Long) -> Unit = {}
 ) {
     val batch by repository.getBatchById(batchId).collectAsState(initial = null)
     val recipe = batch?.let {
         repository.getRecipeById(it.recipeId).collectAsState(initial = null).value
     }
+    val alarms by repository.getAlarmsByBatch(batchId).collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -138,6 +141,75 @@ fun BatchDetailScreen(
                                     text = dateFormat.format(Date(currentBatch.expectedEndDate)),
                                     style = MaterialTheme.typography.bodyMedium
                                 )
+                            }
+                        }
+                    }
+                }
+
+                // Alarms Section
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Alarms",
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                            IconButton(onClick = { onAddAlarm(batchId) }) {
+                                Icon(Icons.Default.Add, contentDescription = "Add Alarm")
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        if (alarms.isEmpty()) {
+                            Text(
+                                text = "No alarms set. Add an alarm to be reminded about important brewing steps.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        } else {
+                            alarms.forEach { alarm ->
+                                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = alarm.title,
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
+                                        if (alarm.description.isNotBlank()) {
+                                            Text(
+                                                text = alarm.description,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                        Text(
+                                            text = dateFormat.format(Date.from(alarm.scheduledTime)),
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                        if (alarm.isTriggered) {
+                                            Text(
+                                                text = "Triggered",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.tertiary
+                                            )
+                                        } else if (!alarm.isEnabled) {
+                                            Text(
+                                                text = "Disabled",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.error
+                                            )
+                                        }
+                                    }
+                                    IconButton(onClick = { onEditAlarm(alarm.id) }) {
+                                        Icon(Icons.Default.Edit, contentDescription = "Edit Alarm")
+                                    }
+                                }
                             }
                         }
                     }

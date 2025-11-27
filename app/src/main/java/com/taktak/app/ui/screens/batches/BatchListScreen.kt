@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,6 +27,7 @@ fun BatchListScreen(
     onAddBatch: () -> Unit
 ) {
     val batches by repository.getAllBatches().collectAsState(initial = emptyList())
+    val allAlarms by repository.getAllAlarms().collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
@@ -65,8 +67,12 @@ fun BatchListScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(batches) { batch ->
+                    val activeAlarmCount = allAlarms.count { alarm ->
+                        alarm.batchId == batch.id && alarm.isEnabled && !alarm.isTriggered
+                    }
                     BatchItem(
                         batch = batch,
+                        activeAlarmCount = activeAlarmCount,
                         onClick = { onBatchClick(batch.id) }
                     )
                 }
@@ -78,6 +84,7 @@ fun BatchListScreen(
 @Composable
 fun BatchItem(
     batch: Batch,
+    activeAlarmCount: Int,
     onClick: () -> Unit
 ) {
     val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
@@ -103,7 +110,30 @@ fun BatchItem(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
-                BatchStatusChip(status = batch.status)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (activeAlarmCount > 0) {
+                        Badge(
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 4.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.Notifications,
+                                    contentDescription = "Active Alarms",
+                                    modifier = Modifier.size(12.dp)
+                                )
+                                Text("$activeAlarmCount")
+                            }
+                        }
+                    }
+                    BatchStatusChip(status = batch.status)
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))

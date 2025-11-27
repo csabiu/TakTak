@@ -47,4 +47,17 @@ sealed class Screen(val route: String) {
             "add_edit_journal"
         }
     }
+
+    object AddEditAlarm : Screen("add_edit_alarm?alarmId={alarmId}&batchId={batchId}") {
+        fun createRoute(alarmId: Long? = null, batchId: Long? = null): String {
+            val params = mutableListOf<String>()
+            if (alarmId != null) params.add("alarmId=$alarmId")
+            if (batchId != null) params.add("batchId=$batchId")
+            return if (params.isNotEmpty()) {
+                "add_edit_alarm?${params.joinToString("&")}"
+            } else {
+                "add_edit_alarm"
+            }
+        }
+    }
 }
