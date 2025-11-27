@@ -13,9 +13,10 @@ import com.taktak.app.data.model.*
         Recipe::class,
         Batch::class,
         TastingNote::class,
-        JournalEntry::class
+        JournalEntry::class,
+        AlarmItem::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -24,6 +25,7 @@ abstract class TakTakDatabase : RoomDatabase() {
     abstract fun batchDao(): BatchDao
     abstract fun tastingNoteDao(): TastingNoteDao
     abstract fun journalEntryDao(): JournalEntryDao
+    abstract fun alarmDao(): AlarmDao
 
     companion object {
         @Volatile
