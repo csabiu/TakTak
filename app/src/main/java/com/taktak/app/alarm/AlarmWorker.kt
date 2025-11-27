@@ -39,7 +39,7 @@ class AlarmWorker(
             }
 
             // Get batch info
-            val batch = batchDao.getBatchById(batchId)
+            val batch = batchDao.getBatchByIdSync(batchId)
             val batchName = batch?.batchName ?: "Unknown Batch"
 
             // Show notification

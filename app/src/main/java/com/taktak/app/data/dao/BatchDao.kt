@@ -13,6 +13,9 @@ interface BatchDao {
     @Query("SELECT * FROM batches WHERE id = :batchId")
     fun getBatchById(batchId: Long): Flow<Batch?>
 
+    @Query("SELECT * FROM batches WHERE id = :batchId")
+    suspend fun getBatchByIdSync(batchId: Long): Batch?
+
     @Query("SELECT * FROM batches WHERE recipeId = :recipeId ORDER BY startDate DESC")
     fun getBatchesByRecipe(recipeId: Long): Flow<List<Batch>>
 
