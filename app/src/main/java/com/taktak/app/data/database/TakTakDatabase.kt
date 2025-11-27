@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
         JournalEntry::class,
         AlarmItem::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -50,18 +50,15 @@ abstract class TakTakDatabase : RoomDatabase() {
         }
 
         private suspend fun populateDatabase(recipeDao: RecipeDao) {
-            // Single-stage makgeolli recipe
+            // Basic Single-Stage Makgeolli
             recipeDao.insertRecipe(
                 Recipe(
-                    name = "Single-Stage Makgeolli (단양주)",
+                    name = "Basic Single-Stage Makgeolli (단양주)",
                     description = "A simple, quick makgeolli perfect for beginners. Made with a single fermentation stage, this produces a light, slightly sweet rice wine with moderate alcohol content.",
-                    ingredients = """
-                        - 2 cups short-grain white rice (멥쌀)
-                        - 2 cups sweet/glutinous rice (찹쌀)
-                        - 1 cup nuruk (Korean fermentation starter, 누룩)
-                        - 6 cups water (spring or filtered)
-                        - Optional: 1/4 cup sugar or honey for sweetness
-                    """.trimIndent(),
+                    riceAmount = "2kg white rice (멥쌀) + 1kg sweet rice (찹쌀)",
+                    waterAmount = "4.5L filtered or spring water",
+                    nurukAmount = "300g nuruk (누룩)",
+                    additionalIngredients = "Optional: 50g sugar or honey for extra sweetness",
                     instructions = """
                         Day 1: Prepare the Rice
                         1. Rinse both types of rice thoroughly until water runs clear
@@ -95,107 +92,164 @@ abstract class TakTakDatabase : RoomDatabase() {
                 )
             )
 
-            // Two-stage makgeolli recipe
+            // Quick Single-Stage Makgeolli
             recipeDao.insertRecipe(
                 Recipe(
-                    name = "Two-Stage Makgeolli (이양주)",
-                    description = "Traditional two-stage fermentation for a more refined, balanced makgeolli. The first stage creates a starter (밑술), which is then used to ferment the main batch (덧술). Results in cleaner flavor and higher alcohol content.",
-                    ingredients = """
-                        Stage 1 - Starter (밑술):
-                        - 1 cup short-grain white rice
-                        - 1/2 cup nuruk
-                        - 1.5 cups water
+                    name = "Quick Single-Stage Makgeolli",
+                    description = "An even simpler version for first-time brewers. Uses less rice and a shorter fermentation time for quick results.",
+                    riceAmount = "1.5kg short-grain white rice",
+                    waterAmount = "3L filtered water",
+                    nurukAmount = "200g nuruk",
+                    additionalIngredients = "",
+                    instructions = """
+                        Day 1:
+                        1. Rinse rice thoroughly until water runs clear
+                        2. Soak in cold water for 2-3 hours
+                        3. Steam for 25-30 minutes until cooked through
+                        4. Cool rice to room temperature on a clean tray
+                        5. In sanitized container, mix rice, crushed nuruk, and water
+                        6. Cover with breathable cloth and ferment at 22-25°C
 
-                        Stage 2 - Main Fermentation (덧술):
-                        - 3 cups short-grain white rice
-                        - 2 cups sweet/glutinous rice
-                        - 1/2 cup nuruk
-                        - 6 cups water
-                        - All of the starter from Stage 1
+                        Days 2-5:
+                        7. Stir once daily
+                        8. Strong fermentation with bubbling occurs
+                        9. Sweet, yeasty aroma develops
+
+                        Days 5-7:
+                        10. Taste daily - when pleasantly sweet and tangy, it's ready
+                        11. Strain through cheesecloth
+                        12. Refrigerate and consume within 10 days
+
+                        Notes:
+                        - Yields about 2-3L of makgeolli
+                        - Alcohol content: 5-7%
+                        - Best served chilled
                     """.trimIndent(),
+                    fermentationTimeDays = 5,
+                    category = "Makgeolli - Single Stage"
+                )
+            )
+
+            // Traditional Two-Stage Makgeolli
+            recipeDao.insertRecipe(
+                Recipe(
+                    name = "Traditional Two-Stage Makgeolli (이양주)",
+                    description = "Traditional two-stage fermentation for a more refined, balanced makgeolli. The first stage creates a starter (밑술), which is then used to ferment the main batch (덧술). Results in cleaner flavor and higher alcohol content.",
+                    riceAmount = "Stage 1: 500g white rice | Stage 2: 2kg white rice + 1kg sweet rice",
+                    waterAmount = "Stage 1: 1L | Stage 2: 4L",
+                    nurukAmount = "Stage 1: 150g | Stage 2: 150g",
+                    additionalIngredients = "",
                     instructions = """
                         STAGE 1 - Starter (밑술) - Days 1-5:
 
                         Day 1:
-                        1. Rinse 1 cup rice thoroughly and soak for 3-4 hours
+                        1. Rinse 500g rice thoroughly and soak for 3-4 hours
                         2. Steam rice for 30 minutes until fully cooked
                         3. Cool rice to room temperature (20-25°C)
-                        4. In sanitized container, mix cooled rice, 1/2 cup crushed nuruk, and 1.5 cups water
+                        4. In sanitized container, mix cooled rice, 150g crushed nuruk, and 1L water
                         5. Mix well, cover with breathable cloth
                         6. Store at 20-25°C (68-77°F)
 
                         Days 2-5:
                         7. Stir once daily
-                        8. After 3-5 days, starter should smell sweet and alcoholic with visible bubbling
-                        9. This is your base starter (밑술) - do not strain yet
+                        8. After 4-5 days, starter should smell sweet and alcoholic with visible bubbling
 
                         STAGE 2 - Main Fermentation (덧술) - Days 6-14:
 
                         Day 6:
-                        10. Prepare main batch rice: rinse 3 cups white rice + 2 cups sweet rice
-                        11. Soak for 3-4 hours, then steam for 35-40 minutes
-                        12. Cool rice completely to room temperature
-                        13. Add cooled rice to the starter vessel
-                        14. Add 1/2 cup crushed nuruk and 6 cups water
-                        15. Mix everything thoroughly
-                        16. Cover and return to 20-25°C fermentation area
+                        9. Prepare 2kg white rice + 1kg sweet rice (rinse, soak 3-4 hours, steam 35-40 min)
+                        10. Cool rice completely to room temperature
+                        11. Add cooled rice to the starter vessel
+                        12. Add 150g crushed nuruk and 4L water
+                        13. Mix everything thoroughly
+                        14. Cover and return to 20-25°C fermentation area
 
                         Days 7-10:
-                        17. Stir gently once daily
-                        18. Strong bubbling and sweet-sour aroma will develop
-                        19. Surface may develop white foam - this is normal
+                        15. Stir gently once daily
+                        16. Strong bubbling and sweet-sour aroma will develop
+                        17. Surface may develop white foam - this is normal
 
-                        Days 10-14:
-                        20. Fermentation will slow down
-                        21. Taste test - should be balanced sweet-tart with good body
-                        22. When bubbling stops, strain through fine cheesecloth
-                        23. Press rice solids gently to extract liquid
-                        24. Refrigerate strained makgeolli
+                        Days 11-14:
+                        18. Fermentation will slow down
+                        19. Taste test - should be balanced sweet-tart with good body
+                        20. When bubbling stops, strain through fine cheesecloth
+                        21. Press rice solids gently to extract liquid
+                        22. Refrigerate strained makgeolli
 
                         Notes:
                         - Two-stage process creates 8-12% alcohol content
                         - More complex flavor profile with better clarity
                         - Can age in refrigerator for 3-4 weeks
-                        - The rice sediment (지게미) can be used for cooking or pickling
                     """.trimIndent(),
                     fermentationTimeDays = 14,
                     category = "Makgeolli - Two Stage"
                 )
             )
 
-            // Three-stage makgeolli recipe
+            // Fruit-Infused Two-Stage Makgeolli
             recipeDao.insertRecipe(
                 Recipe(
-                    name = "Three-Stage Makgeolli (삼양주)",
-                    description = "Advanced three-stage fermentation for premium, sophisticated makgeolli. Creates the most refined flavor with highest alcohol content and exceptional balance. This traditional method was historically reserved for royalty and special occasions.",
-                    ingredients = """
-                        Stage 1 - First Starter (밑술):
-                        - 1 cup short-grain white rice
-                        - 1/3 cup nuruk
-                        - 1.5 cups water
+                    name = "Fruit-Infused Two-Stage Makgeolli",
+                    description = "A modern twist on traditional two-stage makgeolli with fruit additions for unique flavors. Great for experimenting with seasonal fruits.",
+                    riceAmount = "Stage 1: 400g white rice | Stage 2: 1.5kg white rice + 500g sweet rice",
+                    waterAmount = "Stage 1: 800ml | Stage 2: 3L",
+                    nurukAmount = "Stage 1: 120g | Stage 2: 120g",
+                    additionalIngredients = "500g fruit of choice (strawberries, peaches, plums, or apples), cut into small pieces",
+                    instructions = """
+                        STAGE 1 - Starter (Days 1-5):
+                        1. Prepare 400g rice: rinse, soak 3 hours, steam 30 min
+                        2. Cool to room temperature
+                        3. Mix with 120g crushed nuruk and 800ml water in sanitized container
+                        4. Cover and ferment at 22-25°C for 4-5 days, stirring daily
 
-                        Stage 2 - Second Build (두번덧술):
-                        - 2 cups short-grain white rice
-                        - 1 cup sweet/glutinous rice
-                        - 1/4 cup nuruk
-                        - 3 cups water
+                        STAGE 2 - Main Fermentation with Fruit (Days 6-12):
+                        5. Prepare 1.5kg white rice + 500g sweet rice (rinse, soak, steam 35 min)
+                        6. Cool rice completely
+                        7. Add cooled rice to starter
+                        8. Add 120g crushed nuruk and 3L water
+                        9. Add 500g prepared fruit (cleaned and cut into small pieces)
+                        10. Mix gently but thoroughly
+                        11. Cover and ferment at 22-25°C
 
-                        Stage 3 - Final Build (세번덧술):
-                        - 4 cups short-grain white rice
-                        - 2 cups sweet/glutinous rice
-                        - 1/3 cup nuruk
-                        - 7 cups water
-                        - Optional: 1/2 cup honey for premium sweetness
+                        Days 7-9:
+                        12. Stir daily - fruit flavors will infuse
+                        13. Strong fermentation with fruity aromas
+
+                        Days 10-12:
+                        14. Taste test - should have balanced rice and fruit flavors
+                        15. Strain through fine mesh or cheesecloth
+                        16. Can strain multiple times for clarity
+                        17. Refrigerate and consume within 2-3 weeks
+
+                        Fruit Recommendations:
+                        - Strawberries: sweet and aromatic
+                        - Peaches: smooth and fragrant
+                        - Plums (maesil): tart and refreshing
+                        - Apples: crisp and clean
                     """.trimIndent(),
+                    fermentationTimeDays = 12,
+                    category = "Makgeolli - Two Stage"
+                )
+            )
+
+            // Premium Three-Stage Makgeolli
+            recipeDao.insertRecipe(
+                Recipe(
+                    name = "Premium Three-Stage Makgeolli (삼양주)",
+                    description = "Advanced three-stage fermentation for premium, sophisticated makgeolli. Creates the most refined flavor with highest alcohol content and exceptional balance. This traditional method was historically reserved for royalty and special occasions.",
+                    riceAmount = "Stage 1: 500g white rice | Stage 2: 1.5kg white rice + 500g sweet rice | Stage 3: 3kg white rice + 1.5kg sweet rice",
+                    waterAmount = "Stage 1: 1L | Stage 2: 2.5L | Stage 3: 5L",
+                    nurukAmount = "Stage 1: 150g | Stage 2: 100g | Stage 3: 150g",
+                    additionalIngredients = "Optional: 200ml honey for Stage 3 for premium sweetness",
                     instructions = """
                         STAGE 1 - First Starter (밑술) - Days 1-5:
 
                         Day 1:
-                        1. Rinse 1 cup rice until water runs clear
+                        1. Rinse 500g rice until water runs clear
                         2. Soak in cold water for 3-4 hours
                         3. Steam rice for 30 minutes
                         4. Spread on clean tray and cool to 20-25°C
-                        5. In sanitized fermentation vessel, combine rice, 1/3 cup crushed nuruk, and 1.5 cups water
+                        5. In sanitized fermentation vessel, combine rice, 150g crushed nuruk, and 1L water
                         6. Mix thoroughly, cover with breathable cloth
                         7. Ferment at 20-25°C (68-77°F)
 
@@ -203,13 +257,13 @@ abstract class TakTakDatabase : RoomDatabase() {
                         8. Stir once daily with clean utensil
                         9. After 4-5 days, should smell sweet and alcoholic
 
-                        STAGE 2 - Second Build - Days 6-12:
+                        STAGE 2 - Second Build (두번덧술) - Days 6-12:
 
                         Day 6:
-                        10. Prepare 2 cups white rice + 1 cup sweet rice (rinse, soak 3-4 hours, steam 35 min)
+                        10. Prepare 1.5kg white rice + 500g sweet rice (rinse, soak 3-4 hours, steam 35 min)
                         11. Cool rice completely to room temperature
                         12. Add cooled rice to Stage 1 starter
-                        13. Add 1/4 cup crushed nuruk and 3 cups water
+                        13. Add 100g crushed nuruk and 2.5L water
                         14. Mix well, cover, and ferment at 20-25°C
 
                         Days 7-12:
@@ -217,15 +271,15 @@ abstract class TakTakDatabase : RoomDatabase() {
                         16. Strong fermentation with bubbling and foam
                         17. Sweet, fruity aroma develops
 
-                        STAGE 3 - Final Build - Days 13-21:
+                        STAGE 3 - Final Build (세번덧술) - Days 13-21:
 
                         Day 13:
-                        18. Prepare largest rice batch: 4 cups white + 2 cups sweet rice
+                        18. Prepare largest rice batch: 3kg white + 1.5kg sweet rice
                         19. Rinse, soak 3-4 hours, steam 40 minutes
                         20. Cool rice completely - this is critical for success
                         21. Add cooled rice to fermentation vessel (may need larger container)
-                        22. Add 1/3 cup crushed nuruk and 7 cups water
-                        23. Optional: Add 1/2 cup honey for premium flavor
+                        22. Add 150g crushed nuruk and 5L water
+                        23. Optional: Add 200ml honey for premium flavor
                         24. Mix everything thoroughly but gently
                         25. Cover and ferment at 20-25°C
 
@@ -250,13 +304,70 @@ abstract class TakTakDatabase : RoomDatabase() {
                         - Three-stage creates 12-15% alcohol content
                         - Most complex, refined flavor profile
                         - Can age 4-6 weeks for peak flavor development
-                        - Each stage builds on previous flavors, creating depth
                         - Temperature consistency is crucial throughout all stages
-                        - Sanitation is critical - use clean utensils and containers
-                        - Traditional method used for Korean royal court makgeolli
-                        - The longer process allows better flavor development and smoother finish
                     """.trimIndent(),
                     fermentationTimeDays = 21,
+                    category = "Makgeolli - Three Stage"
+                )
+            )
+
+            // Sweet Rice Three-Stage Makgeolli
+            recipeDao.insertRecipe(
+                Recipe(
+                    name = "Sweet Rice Three-Stage Makgeolli (찹쌀삼양주)",
+                    description = "A sweeter, smoother variation of three-stage makgeolli using more glutinous rice. Creates a silky texture and naturally sweeter flavor profile.",
+                    riceAmount = "Stage 1: 400g sweet rice | Stage 2: 1kg white rice + 800g sweet rice | Stage 3: 2kg white rice + 2kg sweet rice",
+                    waterAmount = "Stage 1: 900ml | Stage 2: 2.5L | Stage 3: 5L",
+                    nurukAmount = "Stage 1: 130g | Stage 2: 120g | Stage 3: 150g",
+                    additionalIngredients = "",
+                    instructions = """
+                        STAGE 1 - Sweet Rice Starter (Days 1-5):
+                        1. Rinse 400g sweet rice until water runs clear
+                        2. Soak for 4-5 hours (sweet rice needs longer soaking)
+                        3. Steam for 35 minutes until very soft
+                        4. Cool to room temperature (20-25°C)
+                        5. Mix with 130g crushed nuruk and 900ml water
+                        6. Cover and ferment at 22-25°C
+                        7. Stir daily - sweet rice creates thicker consistency
+
+                        STAGE 2 - Second Build (Days 6-11):
+                        8. Prepare 1kg white rice + 800g sweet rice
+                        9. Rinse, soak (3 hours white, 4-5 hours sweet), steam together 35-40 min
+                        10. Cool completely to room temperature
+                        11. Add to Stage 1 starter
+                        12. Add 120g crushed nuruk and 2.5L water
+                        13. Mix thoroughly - mixture will be thick
+                        14. Cover and ferment at 22-25°C
+                        15. Stir daily for first 4 days
+
+                        STAGE 3 - Final Sweet Build (Days 12-20):
+                        16. Prepare 2kg white rice + 2kg sweet rice
+                        17. Rinse and soak separately (white 3 hours, sweet 5 hours)
+                        18. Steam together for 40 minutes
+                        19. Cool rice completely - critical step
+                        20. Add to fermentation vessel (use large container)
+                        21. Add 150g crushed nuruk and 5L water
+                        22. Mix gently but thoroughly
+                        23. Cover and ferment at 22-25°C
+
+                        Days 13-17:
+                        24. Stir daily - very active fermentation
+                        25. Creamy, sweet aroma develops
+                        26. Thick, silky texture forms
+
+                        Days 18-20:
+                        27. Fermentation slows
+                        28. Taste should be smooth, sweet, balanced
+                        29. Strain through cheesecloth when bubbling stops
+                        30. Refrigerate in sealed containers
+
+                        Notes:
+                        - Higher sweet rice ratio creates silkier texture
+                        - Natural sweetness, less acidic than standard makgeolli
+                        - Alcohol content: 11-14%
+                        - Best consumed within 4-5 weeks
+                    """.trimIndent(),
+                    fermentationTimeDays = 20,
                     category = "Makgeolli - Three Stage"
                 )
             )
