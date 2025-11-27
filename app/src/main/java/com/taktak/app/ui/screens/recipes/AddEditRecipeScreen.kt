@@ -30,7 +30,10 @@ fun AddEditRecipeScreen(
 
     var name by remember { mutableStateOf(recipe?.name ?: "") }
     var description by remember { mutableStateOf(recipe?.description ?: "") }
-    var ingredients by remember { mutableStateOf(recipe?.ingredients ?: "") }
+    var riceAmount by remember { mutableStateOf(recipe?.riceAmount ?: "") }
+    var waterAmount by remember { mutableStateOf(recipe?.waterAmount ?: "") }
+    var nurukAmount by remember { mutableStateOf(recipe?.nurukAmount ?: "") }
+    var additionalIngredients by remember { mutableStateOf(recipe?.additionalIngredients ?: "") }
     var instructions by remember { mutableStateOf(recipe?.instructions ?: "") }
     var fermentationDays by remember { mutableStateOf(recipe?.fermentationTimeDays?.toString() ?: "7") }
     var category by remember { mutableStateOf(recipe?.category ?: "Makgeolli") }
@@ -39,7 +42,10 @@ fun AddEditRecipeScreen(
         recipe?.let {
             name = it.name
             description = it.description
-            ingredients = it.ingredients
+            riceAmount = it.riceAmount
+            waterAmount = it.waterAmount
+            nurukAmount = it.nurukAmount
+            additionalIngredients = it.additionalIngredients
             instructions = it.instructions
             fermentationDays = it.fermentationTimeDays.toString()
             category = it.category
@@ -90,12 +96,36 @@ fun AddEditRecipeScreen(
                 label = "Category"
             )
 
+            Text(
+                text = "Main Ingredients",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+
             TakTakTextField(
-                value = ingredients,
-                onValueChange = { ingredients = it },
-                label = "Ingredients",
+                value = riceAmount,
+                onValueChange = { riceAmount = it },
+                label = "Rice Amount (e.g., 2kg, 500g)"
+            )
+
+            TakTakTextField(
+                value = waterAmount,
+                onValueChange = { waterAmount = it },
+                label = "Water Amount (e.g., 3L, 1500ml)"
+            )
+
+            TakTakTextField(
+                value = nurukAmount,
+                onValueChange = { nurukAmount = it },
+                label = "Nuruk Amount (e.g., 200g, 1 cup)"
+            )
+
+            TakTakTextField(
+                value = additionalIngredients,
+                onValueChange = { additionalIngredients = it },
+                label = "Additional Ingredients (optional)",
                 singleLine = false,
-                maxLines = 5
+                maxLines = 3
             )
 
             TakTakTextField(
@@ -135,7 +165,10 @@ fun AddEditRecipeScreen(
                                     recipe.copy(
                                         name = name,
                                         description = description,
-                                        ingredients = ingredients,
+                                        riceAmount = riceAmount,
+                                        waterAmount = waterAmount,
+                                        nurukAmount = nurukAmount,
+                                        additionalIngredients = additionalIngredients,
                                         instructions = instructions,
                                         fermentationTimeDays = days,
                                         category = category,
@@ -147,7 +180,10 @@ fun AddEditRecipeScreen(
                                     Recipe(
                                         name = name,
                                         description = description,
-                                        ingredients = ingredients,
+                                        riceAmount = riceAmount,
+                                        waterAmount = waterAmount,
+                                        nurukAmount = nurukAmount,
+                                        additionalIngredients = additionalIngredients,
                                         instructions = instructions,
                                         fermentationTimeDays = days,
                                         category = category
@@ -158,7 +194,8 @@ fun AddEditRecipeScreen(
                         }
                     },
                     modifier = Modifier.weight(1f),
-                    enabled = name.isNotBlank() && description.isNotBlank()
+                    enabled = name.isNotBlank() && description.isNotBlank() &&
+                             riceAmount.isNotBlank() && waterAmount.isNotBlank() && nurukAmount.isNotBlank()
                 ) {
                     Text("Save")
                 }
