@@ -23,4 +23,7 @@ interface RecipeDao {
 
     @Query("SELECT * FROM recipes WHERE name LIKE '%' || :query || '%' OR category LIKE '%' || :query || '%'")
     fun searchRecipes(query: String): Flow<List<Recipe>>
+
+    @Query("SELECT COUNT(*) FROM recipes")
+    suspend fun getRecipeCount(): Int
 }

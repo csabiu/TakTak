@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
         JournalEntry::class,
         AlarmItem::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -44,6 +44,20 @@ abstract class TakTakDatabase : RoomDatabase() {
                 INSTANCE?.let { database ->
                     applicationScope.launch {
                         populateDatabase(database.recipeDao())
+                    }
+                }
+            }
+
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
+                INSTANCE?.let { database ->
+                    applicationScope.launch {
+                        // Check if recipes table is empty and populate if needed
+                        val recipeDao = database.recipeDao()
+                        val recipeCount = recipeDao.getRecipeCount()
+                        if (recipeCount == 0) {
+                            populateDatabase(recipeDao)
+                        }
                     }
                 }
             }
