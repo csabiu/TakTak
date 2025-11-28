@@ -2,6 +2,14 @@
 
 TakTak is a comprehensive Android application designed for home brewers of makgeolli and other Korean ferments. The app helps you manage recipes, track batches, record tasting notes, and maintain a detailed fermentation journal.
 
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/recipes.png" width="250" alt="Recipes Screen" />
+  <img src="screenshots/add_batch.png" width="250" alt="Add Batch Screen" />
+  <img src="screenshots/tasting_notes.png" width="250" alt="Tasting Notes Screen" />
+</p>
+
 ## Features
 
 ### 🍶 Recipe Management
