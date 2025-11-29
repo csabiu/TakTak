@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 /**
  * Represents a single stage in a multi-stage recipe
- * Stage 1 includes rice amount, stages 2+ include date of action
+ * All stages can include rice amount, stages 2+ include date of action
  */
 @Entity(
     tableName = "recipe_stages",
@@ -30,7 +30,7 @@ data class RecipeStage(
     // Stage number (1, 2, 3, etc.)
     val stageNumber: Int,
 
-    // Stage 1 only: Rice amount in Kg
+    // All stages: Rice amount in Kg (optional)
     val riceAmountKg: Double? = null,
 
     // All stages: Water amount in Liters
