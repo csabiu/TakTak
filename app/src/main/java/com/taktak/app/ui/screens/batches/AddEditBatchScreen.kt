@@ -19,6 +19,7 @@ import com.taktak.app.data.model.BatchStatus
 import com.taktak.app.data.repository.TakTakRepository
 import com.taktak.app.ui.components.TakTakTextField
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -217,7 +218,7 @@ fun AddEditBatchScreen(
                                                     alarmType = AlarmType.NEXT_STAGE,
                                                     title = "Stage ${stage.stageNumber} - ${batchName}",
                                                     description = "Add stage ${stage.stageNumber} ingredients: ${stage.waterAmountLiters}L water, ${stage.nurukAmountGrams}g nuruk",
-                                                    scheduledTime = scheduledTime,
+                                                    scheduledTime = Instant.ofEpochMilli(scheduledTime),
                                                     isEnabled = true
                                                 )
                                             )
@@ -232,7 +233,7 @@ fun AddEditBatchScreen(
                                             alarmType = AlarmType.FILTER,
                                             title = "Filter - ${batchName}",
                                             description = "Time to filter your makgeolli",
-                                            scheduledTime = filteringTime,
+                                            scheduledTime = Instant.ofEpochMilli(filteringTime),
                                             isEnabled = true
                                         )
                                     )
