@@ -211,8 +211,7 @@ fun AddEditRecipeScreen(
                                     RecipeStage(
                                         recipeId = recipeId,
                                         stageNumber = stageData.stageNumber,
-                                        riceAmountKg = if (stageData.stageNumber == 1)
-                                            stageData.riceAmountKg.toDoubleOrNull() else null,
+                                        riceAmountKg = stageData.riceAmountKg.toDoubleOrNull(),
                                         waterAmountLiters = stageData.waterAmountLiters.toDoubleOrNull() ?: 0.0,
                                         nurukAmountGrams = stageData.nurukAmountGrams.toDoubleOrNull() ?: 0.0,
                                         daysFromStart = if (stageData.stageNumber > 1)
@@ -238,8 +237,7 @@ fun AddEditRecipeScreen(
                                     RecipeStage(
                                         recipeId = newRecipeId,
                                         stageNumber = stageData.stageNumber,
-                                        riceAmountKg = if (stageData.stageNumber == 1)
-                                            stageData.riceAmountKg.toDoubleOrNull() else null,
+                                        riceAmountKg = stageData.riceAmountKg.toDoubleOrNull(),
                                         waterAmountLiters = stageData.waterAmountLiters.toDoubleOrNull() ?: 0.0,
                                         nurukAmountGrams = stageData.nurukAmountGrams.toDoubleOrNull() ?: 0.0,
                                         daysFromStart = if (stageData.stageNumber > 1)
@@ -277,19 +275,6 @@ fun StageForm(
             color = MaterialTheme.colorScheme.primary
         )
 
-        // Stage 1: Rice amount (required)
-        if (stageData.stageNumber == 1) {
-            OutlinedTextField(
-                value = stageData.riceAmountKg,
-                onValueChange = { onUpdate(stageData.copy(riceAmountKg = it)) },
-                label = { Text("Rice Amount (kg)") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                singleLine = true,
-                placeholder = { Text("e.g., 3.0") }
-            )
-        }
-
         // Stage 2+: Days from start (required)
         if (stageData.stageNumber > 1) {
             OutlinedTextField(
@@ -302,6 +287,17 @@ fun StageForm(
                 placeholder = { Text("e.g., 5") }
             )
         }
+
+        // All stages: Rice amount
+        OutlinedTextField(
+            value = stageData.riceAmountKg,
+            onValueChange = { onUpdate(stageData.copy(riceAmountKg = it)) },
+            label = { Text("Rice Amount (kg)") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            singleLine = true,
+            placeholder = { Text("e.g., 3.0") }
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
