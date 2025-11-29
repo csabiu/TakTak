@@ -1,5 +1,6 @@
 package com.taktak.app.ui.screens.batches
 
+import android.app.Application
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -8,7 +9,11 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.taktak.app.TakTakApplication
+import com.taktak.app.data.model.AlarmItem
+import com.taktak.app.data.model.AlarmType
 import com.taktak.app.data.model.Batch
 import com.taktak.app.data.model.BatchStatus
 import com.taktak.app.data.repository.TakTakRepository
@@ -24,6 +29,9 @@ fun AddEditBatchScreen(
     onNavigateBack: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val alarmScheduler = (context.applicationContext as TakTakApplication).alarmScheduler
+
     val batch = if (batchId != null) {
         repository.getBatchById(batchId).collectAsState(initial = null).value
     } else null
@@ -169,7 +177,7 @@ fun AddEditBatchScreen(
                             val startDate = batch?.startDate ?: System.currentTimeMillis()
                             val recipe = recipes.find { it.id == selectedRecipeId }
                             val expectedEndDate = batch?.expectedEndDate ?:
-                                (startDate + (recipe?.fermentationTimeDays ?: 7) * 24 * 60 * 60 * 1000L)
+                                (startDate + (recipe?.filteringDays ?: 7) * 24 * 60 * 60 * 1000L)
 
                             if (batchId != null && batch != null) {
                                 repository.updateBatch(
@@ -182,7 +190,8 @@ fun AddEditBatchScreen(
                                     )
                                 )
                             } else {
-                                repository.insertBatch(
+                                // Create new batch
+                                val newBatchId = repository.insertBatch(
                                     Batch(
                                         batchName = batchName,
                                         recipeId = selectedRecipeId,
@@ -192,6 +201,48 @@ fun AddEditBatchScreen(
                                         status = selectedStatus
                                     )
                                 )
+
+                                // Auto-create alarms for stages and filtering
+                                if (recipe != null) {
+                                    val stages = repository.getStagesForRecipeSync(recipe.id)
+                                    val alarmsToCreate = mutableListOf<AlarmItem>()
+
+                                    // Create alarm for each stage 2+ (stage 1 starts immediately)
+                                    stages.filter { it.stageNumber > 1 }.forEach { stage ->
+                                        stage.daysFromStart?.let { days ->
+                                            val scheduledTime = startDate + (days * 24 * 60 * 60 * 1000L)
+                                            alarmsToCreate.add(
+                                                AlarmItem(
+                                                    batchId = newBatchId,
+                                                    alarmType = AlarmType.NEXT_STAGE,
+                                                    title = "Stage ${stage.stageNumber} - ${batchName}",
+                                                    description = "Add stage ${stage.stageNumber} ingredients: ${stage.waterAmountLiters}L water, ${stage.nurukAmountGrams}g nuruk",
+                                                    scheduledTime = scheduledTime,
+                                                    isEnabled = true
+                                                )
+                                            )
+                                        }
+                                    }
+
+                                    // Create alarm for filtering day
+                                    val filteringTime = startDate + (recipe.filteringDays * 24 * 60 * 60 * 1000L)
+                                    alarmsToCreate.add(
+                                        AlarmItem(
+                                            batchId = newBatchId,
+                                            alarmType = AlarmType.FILTER,
+                                            title = "Filter - ${batchName}",
+                                            description = "Time to filter your makgeolli",
+                                            scheduledTime = filteringTime,
+                                            isEnabled = true
+                                        )
+                                    )
+
+                                    // Insert all alarms and schedule them
+                                    alarmsToCreate.forEach { alarm ->
+                                        val alarmId = repository.insertAlarm(alarm)
+                                        alarmScheduler.scheduleAlarm(alarm.copy(id = alarmId))
+                                    }
+                                }
                             }
                             onNavigateBack()
                         }
