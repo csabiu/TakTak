@@ -112,7 +112,7 @@ fun RecipeItem(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "${recipe.fermentationTimeDays} days",
+                    text = "${recipe.numberOfStages} stage${if (recipe.numberOfStages > 1) "s" else ""} • Filter day ${recipe.filteringDays}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.secondary
                 )

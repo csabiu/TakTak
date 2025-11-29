@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 class TakTakRepository(
     private val recipeDao: RecipeDao,
+    private val recipeStageDao: RecipeStageDao,
     private val batchDao: BatchDao,
     private val tastingNoteDao: TastingNoteDao,
     private val journalEntryDao: JournalEntryDao,
@@ -18,6 +19,15 @@ class TakTakRepository(
     suspend fun updateRecipe(recipe: Recipe) = recipeDao.updateRecipe(recipe)
     suspend fun deleteRecipe(recipe: Recipe) = recipeDao.deleteRecipe(recipe)
     fun searchRecipes(query: String): Flow<List<Recipe>> = recipeDao.searchRecipes(query)
+
+    // Recipe stage operations
+    fun getStagesForRecipe(recipeId: Long): Flow<List<RecipeStage>> = recipeStageDao.getStagesForRecipe(recipeId)
+    suspend fun getStagesForRecipeSync(recipeId: Long): List<RecipeStage> = recipeStageDao.getStagesForRecipeSync(recipeId)
+    suspend fun insertStage(stage: RecipeStage): Long = recipeStageDao.insertStage(stage)
+    suspend fun insertStages(stages: List<RecipeStage>) = recipeStageDao.insertStages(stages)
+    suspend fun updateStage(stage: RecipeStage) = recipeStageDao.updateStage(stage)
+    suspend fun deleteStage(stage: RecipeStage) = recipeStageDao.deleteStage(stage)
+    suspend fun deleteStagesForRecipe(recipeId: Long) = recipeStageDao.deleteStagesForRecipe(recipeId)
 
     // Batch operations
     fun getAllBatches(): Flow<List<Batch>> = batchDao.getAllBatches()

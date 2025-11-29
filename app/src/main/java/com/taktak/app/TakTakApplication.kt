@@ -11,6 +11,7 @@ class TakTakApplication : Application() {
     val repository by lazy {
         TakTakRepository(
             database.recipeDao(),
+            database.recipeStageDao(),
             database.batchDao(),
             database.tastingNoteDao(),
             database.journalEntryDao(),

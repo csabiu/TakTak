@@ -8,15 +8,20 @@ import java.util.Date
 data class Recipe(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+
+    // Basic recipe info
     val name: String,
     val description: String,
-    val riceAmount: String,
-    val waterAmount: String,
-    val nurukAmount: String,
-    val additionalIngredients: String = "",
-    val instructions: String,
-    val fermentationTimeDays: Int,
+
+    // Number of stages in this recipe
+    val numberOfStages: Int,
+
+    // Days from batch start when filtering should occur
+    val filteringDays: Int,
+
+    // Category for organization
     val category: String = "Makgeolli",
+
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )

@@ -22,6 +22,7 @@ fun RecipeDetailScreen(
     onStartBatch: (Long) -> Unit
 ) {
     val recipe by repository.getRecipeById(recipeId).collectAsState(initial = null)
+    val stages by repository.getStagesForRecipe(recipeId).collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -65,6 +66,7 @@ fun RecipeDetailScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Description Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
@@ -86,83 +88,7 @@ fun RecipeDetailScreen(
                     }
                 }
 
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "Ingredients",
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Rice",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Text(
-                                    text = currentRecipe.riceAmount,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Water",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Text(
-                                    text = currentRecipe.waterAmount,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Nuruk",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Text(
-                                    text = currentRecipe.nurukAmount,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-
-                        if (currentRecipe.additionalIngredients.isNotBlank()) {
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text(
-                                text = "Additional Ingredients",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = currentRecipe.additionalIngredients,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-                }
-
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "Instructions",
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = currentRecipe.instructions,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
-
+                // Recipe Info Card
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Row(
                         modifier = Modifier
@@ -172,11 +98,21 @@ fun RecipeDetailScreen(
                     ) {
                         Column {
                             Text(
-                                text = "Fermentation Time",
+                                text = "Stages",
                                 style = MaterialTheme.typography.labelSmall
                             )
                             Text(
-                                text = "${currentRecipe.fermentationTimeDays} days",
+                                text = "${currentRecipe.numberOfStages}",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
+                        Column {
+                            Text(
+                                text = "Filtering Day",
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                            Text(
+                                text = "Day ${currentRecipe.filteringDays}",
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
@@ -188,6 +124,74 @@ fun RecipeDetailScreen(
                             Text(
                                 text = currentRecipe.category,
                                 style = MaterialTheme.typography.titleMedium
+                            )
+                        }
+                    }
+                }
+
+                // Stages Cards
+                stages.forEach { stage ->
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = "Stage ${stage.stageNumber}${if (stage.daysFromStart != null) " - Day ${stage.daysFromStart}" else ""}",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            // Ingredients for this stage
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                if (stage.riceAmountKg != null) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = "Rice",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.secondary
+                                        )
+                                        Text(
+                                            text = "${stage.riceAmountKg} kg",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                }
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = "Water",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
+                                    Text(
+                                        text = "${stage.waterAmountLiters} L",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = "Nuruk",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
+                                    Text(
+                                        text = "${stage.nurukAmountGrams} g",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = "Instructions",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = stage.instructions,
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
                     }
