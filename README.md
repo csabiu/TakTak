@@ -1,5 +1,9 @@
 # TakTak - Korean Fermentation Companion
 
+<p align="center">
+  <img src="app/src/main/res/drawable/icon.png" width="200" alt="TakTak App Icon" />
+</p>
+
 TakTak is a comprehensive Android application designed for home brewers of makgeolli and other Korean ferments. The app helps you manage recipes, track batches, record tasting notes, and maintain a detailed fermentation journal.
 
 ## Screenshots
