@@ -10,8 +10,6 @@ import com.taktak.app.data.repository.TakTakRepository
 import com.taktak.app.ui.screens.batches.BatchDetailScreen
 import com.taktak.app.ui.screens.batches.BatchListScreen
 import com.taktak.app.ui.screens.batches.AddEditBatchScreen
-import com.taktak.app.ui.screens.journal.JournalListScreen
-import com.taktak.app.ui.screens.journal.AddEditJournalScreen
 import com.taktak.app.ui.screens.recipes.RecipeListScreen
 import com.taktak.app.ui.screens.recipes.RecipeDetailScreen
 import com.taktak.app.ui.screens.recipes.AddEditRecipeScreen
@@ -154,31 +152,6 @@ fun TakTakNavigation(
             AddEditTastingNoteScreen(
                 noteId = noteId,
                 batchId = batchId,
-                repository = repository,
-                onNavigateBack = { navController.popBackStack() }
-            )
-        }
-
-        // Journal
-        composable(Screen.Journal.route) {
-            JournalListScreen(
-                repository = repository,
-                onAddEntry = {
-                    navController.navigate(Screen.AddEditJournalEntry.createRoute())
-                }
-            )
-        }
-
-        composable(
-            route = Screen.AddEditJournalEntry.route,
-            arguments = listOf(navArgument("entryId") {
-                type = NavType.LongType
-                defaultValue = -1L
-            })
-        ) { backStackEntry ->
-            val entryId = backStackEntry.arguments?.getLong("entryId")?.takeIf { it != -1L }
-            AddEditJournalScreen(
-                entryId = entryId,
                 repository = repository,
                 onNavigateBack = { navController.popBackStack() }
             )

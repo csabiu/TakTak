@@ -1,5 +1,6 @@
 package com.taktak.app.ui.screens.tastings
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.taktak.app.data.model.TastingNote
 import com.taktak.app.data.repository.TakTakRepository
+import com.taktak.app.ui.components.PhotoPicker
 import com.taktak.app.ui.components.TakTakTextField
 import kotlinx.coroutines.launch
 
@@ -36,6 +38,7 @@ fun AddEditTastingNoteScreen(
     var mouthfeel by remember { mutableStateOf(tastingNote?.mouthfeel ?: "") }
     var rating by remember { mutableStateOf(tastingNote?.overallRating ?: 3.0f) }
     var notes by remember { mutableStateOf(tastingNote?.notes ?: "") }
+    var photoUri by remember { mutableStateOf(tastingNote?.photoUri) }
     var expanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(tastingNote) {
@@ -47,6 +50,7 @@ fun AddEditTastingNoteScreen(
             mouthfeel = it.mouthfeel
             rating = it.overallRating
             notes = it.notes
+            photoUri = it.photoUri
         }
     }
 
@@ -171,6 +175,14 @@ fun AddEditTastingNoteScreen(
                 maxLines = 5
             )
 
+            PhotoPicker(
+                photoUri = photoUri,
+                onPhotoSelected = { uri ->
+                    photoUri = uri?.toString()
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -195,6 +207,7 @@ fun AddEditTastingNoteScreen(
                                         mouthfeel = mouthfeel,
                                         overallRating = rating,
                                         notes = notes,
+                                        photoUri = photoUri,
                                         updatedAt = System.currentTimeMillis()
                                     )
                                 )
@@ -208,7 +221,8 @@ fun AddEditTastingNoteScreen(
                                         taste = taste,
                                         mouthfeel = mouthfeel,
                                         overallRating = rating,
-                                        notes = notes
+                                        notes = notes,
+                                        photoUri = photoUri
                                     )
                                 )
                             }

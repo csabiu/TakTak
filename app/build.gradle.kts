@@ -83,6 +83,9 @@ dependencies {
     // WorkManager for alarm scheduling
     implementation("androidx.work:work-runtime-ktx:2.9.0")
 
+    // Image Loading (Coil)
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

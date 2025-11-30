@@ -19,10 +19,9 @@ import kotlinx.coroutines.launch
         RecipeStage::class,
         Batch::class,
         TastingNote::class,
-        JournalEntry::class,
         AlarmItem::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -31,7 +30,6 @@ abstract class TakTakDatabase : RoomDatabase() {
     abstract fun recipeStageDao(): RecipeStageDao
     abstract fun batchDao(): BatchDao
     abstract fun tastingNoteDao(): TastingNoteDao
-    abstract fun journalEntryDao(): JournalEntryDao
     abstract fun alarmDao(): AlarmDao
 
     companion object {

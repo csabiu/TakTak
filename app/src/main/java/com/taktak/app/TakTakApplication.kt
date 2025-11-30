@@ -14,7 +14,6 @@ class TakTakApplication : Application() {
             database.recipeStageDao(),
             database.batchDao(),
             database.tastingNoteDao(),
-            database.journalEntryDao(),
             database.alarmDao()
         )
     }
