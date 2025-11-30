@@ -11,41 +11,41 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF6A4C93),
-    onPrimary = Color.White,
-    primaryContainer = Color(0xFFE8DEF8),
-    onPrimaryContainer = Color(0xFF21005E),
-    secondary = Color(0xFF8B7355),
+    primary = Color(0xFF4D3D30),           // Dark brown from icon jar
+    onPrimary = Color(0xFFFFF8F0),         // Off-white for contrast
+    primaryContainer = Color(0xFFE8DDD0),  // Light beige from icon background
+    onPrimaryContainer = Color(0xFF2B1E15),
+    secondary = Color(0xFF8B7355),         // Medium tan/brown
     onSecondary = Color.White,
-    secondaryContainer = Color(0xFFFFDDB3),
-    onSecondaryContainer = Color(0xFF2B1700),
-    tertiary = Color(0xFF00677F),
+    secondaryContainer = Color(0xFFD4C4B0),
+    onSecondaryContainer = Color(0xFF3A2E20),
+    tertiary = Color(0xFFA67C52),          // Warm tan
     onTertiary = Color.White,
-    tertiaryContainer = Color(0xFFB8EAFF),
-    onTertiaryContainer = Color(0xFF001F28),
-    background = Color(0xFFFFFBFF),
-    onBackground = Color(0xFF1C1B1E),
-    surface = Color(0xFFFFFBFF),
-    onSurface = Color(0xFF1C1B1E),
+    tertiaryContainer = Color(0xFFF5E6D3),
+    onTertiaryContainer = Color(0xFF3D2E1F),
+    background = Color(0xFFFFF8F0),        // Warm off-white
+    onBackground = Color(0xFF2B1E15),
+    surface = Color(0xFFFFFBF5),           // Slightly warmer surface
+    onSurface = Color(0xFF2B1E15),
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFD0BCFF),
-    onPrimary = Color(0xFF381E72),
-    primaryContainer = Color(0xFF4F378A),
-    onPrimaryContainer = Color(0xFFE8DEF8),
-    secondary = Color(0xFFFFDDB3),
-    onSecondary = Color(0xFF462B00),
-    secondaryContainer = Color(0xFF664000),
-    onSecondaryContainer = Color(0xFFFFDDB3),
-    tertiary = Color(0xFF5FD4FF),
-    onTertiary = Color(0xFF003544),
-    tertiaryContainer = Color(0xFF004D61),
-    onTertiaryContainer = Color(0xFFB8EAFF),
-    background = Color(0xFF1C1B1E),
-    onBackground = Color(0xFFE6E1E6),
-    surface = Color(0xFF1C1B1E),
-    onSurface = Color(0xFFE6E1E6),
+    primary = Color(0xFFD4C4B0),           // Light tan/beige
+    onPrimary = Color(0xFF2B1E15),         // Dark brown
+    primaryContainer = Color(0xFF5A4838),  // Medium dark brown
+    onPrimaryContainer = Color(0xFFE8DDD0),
+    secondary = Color(0xFFCBB299),         // Warm tan
+    onSecondary = Color(0xFF3A2E20),
+    secondaryContainer = Color(0xFF4A3C2E),
+    onSecondaryContainer = Color(0xFFE8DDD0),
+    tertiary = Color(0xFFB89968),          // Golden tan
+    onTertiary = Color(0xFF2F2419),
+    tertiaryContainer = Color(0xFF5D4A35),
+    onTertiaryContainer = Color(0xFFF5E6D3),
+    background = Color(0xFF1F1912),        // Dark warm brown
+    onBackground = Color(0xFFE8DDD0),
+    surface = Color(0xFF27211A),           // Slightly lighter dark brown
+    onSurface = Color(0xFFE8DDD0),
 )
 
 @Composable
@@ -59,7 +59,7 @@ fun TakTakTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
