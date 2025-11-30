@@ -79,6 +79,7 @@ fun TastingNoteListScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TastingNoteItem(
     note: TastingNote,
