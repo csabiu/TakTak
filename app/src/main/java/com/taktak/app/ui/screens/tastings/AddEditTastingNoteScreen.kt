@@ -1,6 +1,5 @@
 package com.taktak.app.ui.screens.tastings
 
-import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -38,7 +37,7 @@ fun AddEditTastingNoteScreen(
     var mouthfeel by remember { mutableStateOf(tastingNote?.mouthfeel ?: "") }
     var rating by remember { mutableStateOf(tastingNote?.overallRating ?: 3.0f) }
     var notes by remember { mutableStateOf(tastingNote?.notes ?: "") }
-    var photoUri by remember { mutableStateOf(tastingNote?.photoUri) }
+    var photoUris by remember { mutableStateOf(tastingNote?.photoUris ?: emptyList()) }
     var expanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(tastingNote) {
@@ -50,7 +49,7 @@ fun AddEditTastingNoteScreen(
             mouthfeel = it.mouthfeel
             rating = it.overallRating
             notes = it.notes
-            photoUri = it.photoUri
+            photoUris = it.photoUris
         }
     }
 
@@ -176,9 +175,9 @@ fun AddEditTastingNoteScreen(
             )
 
             PhotoPicker(
-                photoUri = photoUri,
-                onPhotoSelected = { uri ->
-                    photoUri = uri?.toString()
+                photoUris = photoUris,
+                onPhotosChanged = { uris ->
+                    photoUris = uris
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -207,7 +206,7 @@ fun AddEditTastingNoteScreen(
                                         mouthfeel = mouthfeel,
                                         overallRating = rating,
                                         notes = notes,
-                                        photoUri = photoUri,
+                                        photoUris = photoUris,
                                         updatedAt = System.currentTimeMillis()
                                     )
                                 )
@@ -222,7 +221,7 @@ fun AddEditTastingNoteScreen(
                                         mouthfeel = mouthfeel,
                                         overallRating = rating,
                                         notes = notes,
-                                        photoUri = photoUri
+                                        photoUris = photoUris
                                     )
                                 )
                             }

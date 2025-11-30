@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
         TastingNote::class,
         AlarmItem::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
