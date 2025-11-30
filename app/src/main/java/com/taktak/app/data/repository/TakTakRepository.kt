@@ -9,7 +9,6 @@ class TakTakRepository(
     private val recipeStageDao: RecipeStageDao,
     private val batchDao: BatchDao,
     private val tastingNoteDao: TastingNoteDao,
-    private val journalEntryDao: JournalEntryDao,
     private val alarmDao: AlarmDao
 ) {
     // Recipe operations
@@ -45,14 +44,6 @@ class TakTakRepository(
     suspend fun insertTastingNote(note: TastingNote): Long = tastingNoteDao.insertTastingNote(note)
     suspend fun updateTastingNote(note: TastingNote) = tastingNoteDao.updateTastingNote(note)
     suspend fun deleteTastingNote(note: TastingNote) = tastingNoteDao.deleteTastingNote(note)
-
-    // Journal entry operations
-    fun getAllJournalEntries(): Flow<List<JournalEntry>> = journalEntryDao.getAllJournalEntries()
-    fun getJournalEntryById(id: Long): Flow<JournalEntry?> = journalEntryDao.getJournalEntryById(id)
-    fun getJournalEntriesByBatch(batchId: Long): Flow<List<JournalEntry>> = journalEntryDao.getJournalEntriesByBatch(batchId)
-    suspend fun insertJournalEntry(entry: JournalEntry): Long = journalEntryDao.insertJournalEntry(entry)
-    suspend fun updateJournalEntry(entry: JournalEntry) = journalEntryDao.updateJournalEntry(entry)
-    suspend fun deleteJournalEntry(entry: JournalEntry) = journalEntryDao.deleteJournalEntry(entry)
 
     // Alarm operations
     fun getAllAlarms(): Flow<List<AlarmItem>> = alarmDao.getAllAlarms()

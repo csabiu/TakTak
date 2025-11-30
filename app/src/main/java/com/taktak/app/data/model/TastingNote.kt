@@ -28,6 +28,7 @@ data class TastingNote(
     val mouthfeel: String,
     val overallRating: Float,
     val notes: String = "",
+    val photoUri: String? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )

@@ -94,18 +94,6 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                 )
-                                NavigationBarItem(
-                                    icon = { Icon(Icons.Default.Book, contentDescription = null) },
-                                    label = { Text("Journal") },
-                                    selected = currentRoute?.startsWith("journal") == true ||
-                                             currentRoute?.startsWith("add_edit_journal") == true,
-                                    onClick = {
-                                        navController.navigate(Screen.Journal.route) {
-                                            popUpTo(navController.graph.startDestinationId)
-                                            launchSingleTop = true
-                                        }
-                                    }
-                                )
                             }
                         }
                     }
@@ -130,8 +118,7 @@ class MainActivity : ComponentActivity() {
         return route in listOf(
             Screen.Recipes.route,
             Screen.Batches.route,
-            Screen.TastingNotes.route,
-            Screen.Journal.route
+            Screen.TastingNotes.route
         )
     }
 }

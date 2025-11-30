@@ -39,15 +39,6 @@ sealed class Screen(val route: String) {
         }
     }
 
-    object Journal : Screen("journal")
-    object AddEditJournalEntry : Screen("add_edit_journal?entryId={entryId}") {
-        fun createRoute(entryId: Long? = null) = if (entryId != null) {
-            "add_edit_journal?entryId=$entryId"
-        } else {
-            "add_edit_journal"
-        }
-    }
-
     object AddEditAlarm : Screen("add_edit_alarm?alarmId={alarmId}&batchId={batchId}") {
         fun createRoute(alarmId: Long? = null, batchId: Long? = null): String {
             val params = mutableListOf<String>()
