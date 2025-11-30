@@ -130,6 +130,9 @@ fun TakTakNavigation(
                 repository = repository,
                 onAddTastingNote = {
                     navController.navigate(Screen.AddEditTastingNote.createRoute())
+                },
+                onEditTastingNote = { noteId ->
+                    navController.navigate(Screen.AddEditTastingNote.createRoute(noteId = noteId))
                 }
             )
         }

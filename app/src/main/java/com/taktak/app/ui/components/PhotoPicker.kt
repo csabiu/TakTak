@@ -11,6 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
@@ -31,8 +33,8 @@ import java.io.File
 
 @Composable
 fun PhotoPicker(
-    photoUri: String?,
-    onPhotoSelected: (Uri?) -> Unit,
+    photoUris: List<String>,
+    onPhotosChanged: (List<String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -52,9 +54,6 @@ fun PhotoPicker(
                     file
                 )
             }
-            tempCameraUri?.let { uri ->
-                // This will be handled by the camera launcher
-            }
         }
     }
 
@@ -63,22 +62,28 @@ fun PhotoPicker(
         ActivityResultContracts.TakePicture()
     ) { success ->
         if (success && tempCameraUri != null) {
-            onPhotoSelected(tempCameraUri)
+            onPhotosChanged(photoUris + tempCameraUri.toString())
         }
         showDialog = false
     }
 
-    // Photo picker launcher (for Android 13+)
-    val photoPickerLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            // Take persistable URI permission
-            context.contentResolver.takePersistableUriPermission(
-                uri,
-                android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            onPhotoSelected(uri)
+    // Photo picker launcher for multiple photos (Android 13+)
+    val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia()
+    ) { uris ->
+        if (uris.isNotEmpty()) {
+            // Take persistable URI permission for all selected photos
+            uris.forEach { uri ->
+                try {
+                    context.contentResolver.takePersistableUriPermission(
+                        uri,
+                        android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            onPhotosChanged(photoUris + uris.map { it.toString() })
         }
         showDialog = false
     }
@@ -88,43 +93,85 @@ fun PhotoPicker(
         ActivityResultContracts.GetContent()
     ) { uri ->
         if (uri != null) {
-            onPhotoSelected(uri)
+            onPhotosChanged(photoUris + uri.toString())
         }
         showDialog = false
     }
 
     Column(modifier = modifier) {
-        if (photoUri != null) {
-            // Display selected photo
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(8.dp))
+        if (photoUris.isNotEmpty()) {
+            // Display selected photos in a horizontal scrollable list
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                AsyncImage(
-                    model = photoUri,
-                    contentDescription = "Selected photo",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-
-                // Remove button
-                IconButton(
-                    onClick = { onPhotoSelected(null) },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(8.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                            RoundedCornerShape(50)
+                items(photoUris) { photoUri ->
+                    Box(
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    ) {
+                        AsyncImage(
+                            model = photoUri,
+                            contentDescription = "Selected photo",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
                         )
-                ) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = "Remove photo",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
+
+                        // Remove button
+                        IconButton(
+                            onClick = {
+                                onPhotosChanged(photoUris.filter { it != photoUri })
+                            },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(8.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                                    RoundedCornerShape(50)
+                                )
+                        ) {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "Remove photo",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                }
+
+                // Add more photos button
+                item {
+                    OutlinedCard(
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(200.dp)
+                            .clickable { showDialog = true },
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    Icons.Default.AddPhotoAlternate,
+                                    contentDescription = "Add more photos",
+                                    modifier = Modifier.size(48.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    "Add More",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    }
                 }
             }
         } else {
@@ -145,13 +192,13 @@ fun PhotoPicker(
                     ) {
                         Icon(
                             Icons.Default.AddPhotoAlternate,
-                            contentDescription = "Add photo",
+                            contentDescription = "Add photos",
                             modifier = Modifier.size(48.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            "Add Photo",
+                            "Add Photos",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -165,7 +212,7 @@ fun PhotoPicker(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("Add Photo") },
+            title = { Text("Add Photos") },
             text = {
                 Column {
                     TextButton(
@@ -201,7 +248,7 @@ fun PhotoPicker(
                     TextButton(
                         onClick = {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                photoPickerLauncher.launch(
+                                multiplePhotoPickerLauncher.launch(
                                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                 )
                             } else {

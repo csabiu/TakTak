@@ -25,7 +25,8 @@ import java.util.*
 @Composable
 fun TastingNoteListScreen(
     repository: TakTakRepository,
-    onAddTastingNote: () -> Unit
+    onAddTastingNote: () -> Unit,
+    onEditTastingNote: (Long) -> Unit
 ) {
     val tastingNotes by repository.getAllTastingNotes().collectAsState(initial = emptyList())
 
@@ -67,7 +68,11 @@ fun TastingNoteListScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(tastingNotes) { note ->
-                    TastingNoteItem(note = note, repository = repository)
+                    TastingNoteItem(
+                        note = note,
+                        repository = repository,
+                        onClick = { onEditTastingNote(note.id) }
+                    )
                 }
             }
         }
@@ -77,14 +82,16 @@ fun TastingNoteListScreen(
 @Composable
 fun TastingNoteItem(
     note: TastingNote,
-    repository: TakTakRepository
+    repository: TakTakRepository,
+    onClick: () -> Unit
 ) {
     val batch by repository.getBatchById(note.batchId).collectAsState(initial = null)
     val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -92,15 +99,34 @@ fun TastingNoteItem(
                 .padding(16.dp)
         ) {
             // Photo thumbnail if available
-            if (note.photoUri != null) {
-                AsyncImage(
-                    model = note.photoUri,
-                    contentDescription = "Tasting photo",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
+            if (note.photoUris.isNotEmpty()) {
+                Box {
+                    AsyncImage(
+                        model = note.photoUris.first(),
+                        contentDescription = "Tasting photo",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                    // Photo count badge
+                    if (note.photoUris.size > 1) {
+                        Surface(
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(4.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.primaryContainer
+                        ) {
+                            Text(
+                                text = "+${note.photoUris.size - 1}",
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.width(12.dp))
             }
 
