@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         if (shouldShowBottomBar(currentRoute)) {
                             NavigationBar {
                                 NavigationBarItem(
-                                    icon = { Icon(Icons.Default.Restaurant, contentDescription = null) },
+                                    icon = { Icon(Icons.Default.MenuBook, contentDescription = null) },
                                     label = { Text("레시피") },
                                     selected = currentRoute?.startsWith("recipe") == true,
                                     onClick = {
