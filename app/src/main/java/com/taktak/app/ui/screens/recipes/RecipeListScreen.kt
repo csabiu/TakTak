@@ -27,7 +27,7 @@ fun RecipeListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Recipes") },
+                title = { Text("레시피") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -36,7 +36,7 @@ fun RecipeListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddRecipe) {
-                Icon(Icons.Default.Add, contentDescription = "Add Recipe")
+                Icon(Icons.Default.Add, contentDescription = "레시피 추가")
             }
         }
     ) { paddingValues ->
@@ -48,7 +48,7 @@ fun RecipeListScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No recipes yet. Tap + to add your first recipe!",
+                    text = "아직 레시피가 없습니다. +를 눌러 첫 레시피를 추가하세요!",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -112,7 +112,7 @@ fun RecipeItem(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "${recipe.numberOfStages} stage${if (recipe.numberOfStages > 1) "s" else ""} • Filter day ${recipe.filteringDays}",
+                    text = "${recipe.numberOfStages}단 발효 • ${recipe.filteringDays}일째 거르기",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.secondary
                 )

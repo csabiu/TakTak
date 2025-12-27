@@ -16,8 +16,8 @@ import com.taktak.app.data.model.AlarmItem
  */
 object NotificationHelper {
     private const val CHANNEL_ID = "brew_alarms"
-    private const val CHANNEL_NAME = "Brew Alarms"
-    private const val CHANNEL_DESCRIPTION = "Notifications for brew batch alarms"
+    private const val CHANNEL_NAME = "양조 알람"
+    private const val CHANNEL_DESCRIPTION = "발효 단계 알림"
 
     /**
      * Create notification channel (required for Android 8.0+)
@@ -59,10 +59,10 @@ object NotificationHelper {
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(alarm.title)
-            .setContentText("Batch: $batchName - ${alarm.description}")
+            .setContentText("발효중: $batchName - ${alarm.description}")
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText("Batch: $batchName\n\n${alarm.description}")
+                    .bigText("발효중: $batchName\n\n${alarm.description}")
             )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)

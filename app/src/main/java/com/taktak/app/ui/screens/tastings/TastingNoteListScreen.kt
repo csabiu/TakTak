@@ -33,7 +33,7 @@ fun TastingNoteListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Tasting Notes") },
+                title = { Text("시음 노트") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -42,7 +42,7 @@ fun TastingNoteListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddTastingNote) {
-                Icon(Icons.Default.Add, contentDescription = "Add Tasting Note")
+                Icon(Icons.Default.Add, contentDescription = "시음 노트 추가")
             }
         }
     ) { paddingValues ->
@@ -54,7 +54,7 @@ fun TastingNoteListScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No tasting notes yet. Start tasting!",
+                    text = "아직 시음 노트가 없습니다. 시음을 시작하세요!",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -104,7 +104,7 @@ fun TastingNoteItem(
                 Box {
                     AsyncImage(
                         model = note.photoUris.first(),
-                        contentDescription = "Tasting photo",
+                        contentDescription = "시음 사진",
                         modifier = Modifier
                             .size(80.dp)
                             .clip(RoundedCornerShape(8.dp)),
@@ -141,7 +141,7 @@ fun TastingNoteItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = batch?.batchName ?: "Unknown Batch",
+                        text = batch?.batchName ?: "알 수 없는 발효",
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(1f)
                     )
@@ -172,7 +172,7 @@ fun TastingNoteItem(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Taste: ${note.taste}",
+                    text = "맛: ${note.taste}",
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis

@@ -47,7 +47,7 @@ fun AddEditRecipeScreen(
     var description by remember { mutableStateOf("") }
     var numberOfStages by remember { mutableStateOf(1) }
     var filteringDays by remember { mutableStateOf(7) }
-    var category by remember { mutableStateOf("Makgeolli") }
+    var category by remember { mutableStateOf("막걸리") }
     var stages by remember { mutableStateOf(listOf(StageFormData(1))) }
 
     // Load existing recipe and stages
@@ -90,10 +90,10 @@ fun AddEditRecipeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (recipeId == null) "Add Recipe" else "Edit Recipe") },
+                title = { Text(if (recipeId == null) "레시피 추가" else "레시피 수정") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "뒤로")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -112,7 +112,7 @@ fun AddEditRecipeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Basic Information",
+                text = "기본 정보",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -120,13 +120,13 @@ fun AddEditRecipeScreen(
             TakTakTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = "Recipe Name"
+                label = "레시피 이름"
             )
 
             TakTakTextField(
                 value = description,
                 onValueChange = { description = it },
-                label = "Description",
+                label = "설명",
                 singleLine = false,
                 maxLines = 3
             )
@@ -138,7 +138,7 @@ fun AddEditRecipeScreen(
                 IntegerCounter(
                     value = numberOfStages,
                     onValueChange = { numberOfStages = it },
-                    label = "Number of Stages",
+                    label = "단계 수",
                     minValue = 1,
                     maxValue = 5,
                     modifier = Modifier.weight(1f)
@@ -147,7 +147,7 @@ fun AddEditRecipeScreen(
                 IntegerCounter(
                     value = filteringDays,
                     onValueChange = { filteringDays = it },
-                    label = "Filtering Day",
+                    label = "거르는 날",
                     minValue = 1,
                     maxValue = 60,
                     modifier = Modifier.weight(1f)
@@ -157,7 +157,7 @@ fun AddEditRecipeScreen(
             TakTakTextField(
                 value = category,
                 onValueChange = { category = it },
-                label = "Category"
+                label = "분류"
             )
 
             Divider()
@@ -183,7 +183,7 @@ fun AddEditRecipeScreen(
                     onClick = onNavigateBack,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Cancel")
+                    Text("취소")
                 }
 
                 Button(
@@ -251,7 +251,7 @@ fun AddEditRecipeScreen(
                     enabled = name.isNotBlank() && description.isNotBlank() &&
                              stages.all { it.waterAmountLiters.isNotBlank() && it.nurukAmountGrams.isNotBlank() }
                 ) {
-                    Text("Save")
+                    Text("저장")
                 }
             }
         }
@@ -267,7 +267,7 @@ fun StageForm(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Stage ${stageData.stageNumber}",
+            text = "${stageData.stageNumber}단계",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary
         )
@@ -277,11 +277,11 @@ fun StageForm(
             OutlinedTextField(
                 value = stageData.daysFromStart,
                 onValueChange = { onUpdate(stageData.copy(daysFromStart = it)) },
-                label = { Text("Days from Batch Start") },
+                label = { Text("발효 시작 후 며칠") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
-                placeholder = { Text("e.g., 5") }
+                placeholder = { Text("예: 5") }
             )
         }
 
@@ -289,11 +289,11 @@ fun StageForm(
         OutlinedTextField(
             value = stageData.riceAmountKg,
             onValueChange = { onUpdate(stageData.copy(riceAmountKg = it)) },
-            label = { Text("Rice Amount (kg)") },
+            label = { Text("쌀 양 (kg)") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true,
-            placeholder = { Text("e.g., 3.0") }
+            placeholder = { Text("예: 3.0") }
         )
 
         Row(
@@ -303,28 +303,28 @@ fun StageForm(
             OutlinedTextField(
                 value = stageData.waterAmountLiters,
                 onValueChange = { onUpdate(stageData.copy(waterAmountLiters = it)) },
-                label = { Text("Water (L)") },
+                label = { Text("물 (L)") },
                 modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 singleLine = true,
-                placeholder = { Text("e.g., 4.5") }
+                placeholder = { Text("예: 4.5") }
             )
 
             OutlinedTextField(
                 value = stageData.nurukAmountGrams,
                 onValueChange = { onUpdate(stageData.copy(nurukAmountGrams = it)) },
-                label = { Text("Nuruk (g)") },
+                label = { Text("누룩 (g)") },
                 modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 singleLine = true,
-                placeholder = { Text("e.g., 300") }
+                placeholder = { Text("예: 300") }
             )
         }
 
         TakTakTextField(
             value = stageData.instructions,
             onValueChange = { onUpdate(stageData.copy(instructions = it)) },
-            label = "Instructions",
+            label = "만드는 방법",
             singleLine = false,
             maxLines = 6
         )

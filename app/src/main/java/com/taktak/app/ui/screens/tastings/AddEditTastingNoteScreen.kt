@@ -62,10 +62,10 @@ fun AddEditTastingNoteScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (noteId == null) "Add Tasting Note" else "Edit Tasting Note") },
+                title = { Text(if (noteId == null) "시음 노트 추가" else "시음 노트 수정") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "뒤로")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -88,10 +88,10 @@ fun AddEditTastingNoteScreen(
                 onExpandedChange = { expanded = it }
             ) {
                 OutlinedTextField(
-                    value = batches.find { it.id == selectedBatchId }?.batchName ?: "Select Batch",
+                    value = batches.find { it.id == selectedBatchId }?.batchName ?: "발효 선택",
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Batch") },
+                    label = { Text("발효중") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -116,7 +116,7 @@ fun AddEditTastingNoteScreen(
             TakTakTextField(
                 value = appearance,
                 onValueChange = { appearance = it },
-                label = "Appearance",
+                label = "외관",
                 singleLine = false,
                 maxLines = 2
             )
@@ -124,7 +124,7 @@ fun AddEditTastingNoteScreen(
             TakTakTextField(
                 value = aroma,
                 onValueChange = { aroma = it },
-                label = "Aroma",
+                label = "향",
                 singleLine = false,
                 maxLines = 2
             )
@@ -132,7 +132,7 @@ fun AddEditTastingNoteScreen(
             TakTakTextField(
                 value = taste,
                 onValueChange = { taste = it },
-                label = "Taste",
+                label = "맛",
                 singleLine = false,
                 maxLines = 3
             )
@@ -140,14 +140,14 @@ fun AddEditTastingNoteScreen(
             TakTakTextField(
                 value = mouthfeel,
                 onValueChange = { mouthfeel = it },
-                label = "Mouthfeel",
+                label = "질감",
                 singleLine = false,
                 maxLines = 2
             )
 
             Column {
                 Text(
-                    text = "Overall Rating: ${String.format("%.1f", rating)}",
+                    text = "전체 평가: ${String.format("%.1f", rating)}",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Slider(
@@ -169,7 +169,7 @@ fun AddEditTastingNoteScreen(
             TakTakTextField(
                 value = notes,
                 onValueChange = { notes = it },
-                label = "Additional Notes",
+                label = "추가 메모",
                 singleLine = false,
                 maxLines = 5
             )
@@ -190,7 +190,7 @@ fun AddEditTastingNoteScreen(
                     onClick = onNavigateBack,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Cancel")
+                    Text("취소")
                 }
 
                 Button(
@@ -231,7 +231,7 @@ fun AddEditTastingNoteScreen(
                     modifier = Modifier.weight(1f),
                     enabled = selectedBatchId > 0 && taste.isNotBlank()
                 ) {
-                    Text("Save")
+                    Text("저장")
                 }
             }
         }

@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                             NavigationBar {
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.Restaurant, contentDescription = null) },
-                                    label = { Text("Recipes") },
+                                    label = { Text("레시피") },
                                     selected = currentRoute?.startsWith("recipe") == true,
                                     onClick = {
                                         navController.navigate(Screen.Recipes.route) {
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.Science, contentDescription = null) },
-                                    label = { Text("Batches") },
+                                    label = { Text("발효중") },
                                     selected = currentRoute?.startsWith("batch") == true,
                                     onClick = {
                                         navController.navigate(Screen.Batches.route) {
@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.WineBar, contentDescription = null) },
-                                    label = { Text("Tastings") },
+                                    label = { Text("시음") },
                                     selected = currentRoute?.startsWith("tasting") == true,
                                     onClick = {
                                         navController.navigate(Screen.TastingNotes.route) {

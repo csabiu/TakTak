@@ -33,15 +33,15 @@ fun RecipeDetailScreen(
                     title = { Text(currentRecipe.name) },
                     navigationIcon = {
                         IconButton(onClick = onNavigateBack) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.Default.ArrowBack, contentDescription = "뒤로")
                         }
                     },
                     actions = {
                         IconButton(onClick = { onEditRecipe(recipeId) }) {
-                            Icon(Icons.Default.Edit, contentDescription = "Edit")
+                            Icon(Icons.Default.Edit, contentDescription = "수정")
                         }
                         IconButton(onClick = { showDeleteDialog = true }) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete")
+                            Icon(Icons.Default.Delete, contentDescription = "삭제")
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -54,7 +54,7 @@ fun RecipeDetailScreen(
                 ExtendedFloatingActionButton(
                     onClick = { onStartBatch(recipeId) },
                     icon = { Icon(Icons.Default.Science, contentDescription = null) },
-                    text = { Text("Start Batch") }
+                    text = { Text("발효 시작") }
                 )
             }
         ) { paddingValues ->
@@ -75,7 +75,7 @@ fun RecipeDetailScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Description",
+                            text = "설명",
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
@@ -98,27 +98,27 @@ fun RecipeDetailScreen(
                     ) {
                         Column {
                             Text(
-                                text = "Stages",
+                                text = "단계",
                                 style = MaterialTheme.typography.labelSmall
                             )
                             Text(
-                                text = "${currentRecipe.numberOfStages}",
+                                text = "${currentRecipe.numberOfStages}단",
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
                         Column {
                             Text(
-                                text = "Filtering Day",
+                                text = "거르는 날",
                                 style = MaterialTheme.typography.labelSmall
                             )
                             Text(
-                                text = "Day ${currentRecipe.filteringDays}",
+                                text = "${currentRecipe.filteringDays}일",
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
                         Column {
                             Text(
-                                text = "Category",
+                                text = "분류",
                                 style = MaterialTheme.typography.labelSmall
                             )
                             Text(
@@ -134,7 +134,7 @@ fun RecipeDetailScreen(
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Stage ${stage.stageNumber}${if (stage.daysFromStart != null) " - Day ${stage.daysFromStart}" else ""}",
+                                text = "${stage.stageNumber}단계${if (stage.daysFromStart != null) " - ${stage.daysFromStart}일" else ""}",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -148,7 +148,7 @@ fun RecipeDetailScreen(
                                 if (stage.riceAmountKg != null) {
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
-                                            text = "Rice",
+                                            text = "쌀",
                                             style = MaterialTheme.typography.labelMedium,
                                             color = MaterialTheme.colorScheme.secondary
                                         )
@@ -160,7 +160,7 @@ fun RecipeDetailScreen(
                                 }
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = "Water",
+                                        text = "물",
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.secondary
                                     )
@@ -171,7 +171,7 @@ fun RecipeDetailScreen(
                                 }
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = "Nuruk",
+                                        text = "누룩",
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.secondary
                                     )
@@ -184,7 +184,7 @@ fun RecipeDetailScreen(
 
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = "Instructions",
+                                text = "만드는 방법",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.secondary
                             )
@@ -202,8 +202,8 @@ fun RecipeDetailScreen(
         if (showDeleteDialog) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
-                title = { Text("Delete Recipe") },
-                text = { Text("Are you sure you want to delete this recipe? This action cannot be undone.") },
+                title = { Text("레시피 삭제") },
+                text = { Text("이 레시피를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.") },
                 confirmButton = {
                     TextButton(
                         onClick = {
@@ -213,12 +213,12 @@ fun RecipeDetailScreen(
                             }
                         }
                     ) {
-                        Text("Delete")
+                        Text("삭제")
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDeleteDialog = false }) {
-                        Text("Cancel")
+                        Text("취소")
                     }
                 }
             )
