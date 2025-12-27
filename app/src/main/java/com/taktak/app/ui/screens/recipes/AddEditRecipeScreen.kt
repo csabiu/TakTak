@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.taktak.app.data.model.Recipe
 import com.taktak.app.data.model.RecipeStage
 import com.taktak.app.data.repository.TakTakRepository
+import com.taktak.app.ui.components.IntegerCounter
 import com.taktak.app.ui.components.TakTakTextField
 import kotlinx.coroutines.launch
 
@@ -44,8 +45,8 @@ fun AddEditRecipeScreen(
 
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var numberOfStages by remember { mutableStateOf("1") }
-    var filteringDays by remember { mutableStateOf("7") }
+    var numberOfStages by remember { mutableStateOf(1) }
+    var filteringDays by remember { mutableStateOf(7) }
     var category by remember { mutableStateOf("Makgeolli") }
     var stages by remember { mutableStateOf(listOf(StageFormData(1))) }
 
@@ -54,8 +55,8 @@ fun AddEditRecipeScreen(
         recipe?.let {
             name = it.name
             description = it.description
-            numberOfStages = it.numberOfStages.toString()
-            filteringDays = it.filteringDays.toString()
+            numberOfStages = it.numberOfStages
+            filteringDays = it.filteringDays
             category = it.category
 
             if (existingStages.isNotEmpty()) {
@@ -75,14 +76,13 @@ fun AddEditRecipeScreen(
 
     // Update stages list when number of stages changes
     LaunchedEffect(numberOfStages) {
-        val numStages = numberOfStages.toIntOrNull() ?: 1
-        if (stages.size != numStages) {
-            stages = if (numStages > stages.size) {
+        if (stages.size != numberOfStages) {
+            stages = if (numberOfStages > stages.size) {
                 // Add new stages
-                stages + (stages.size + 1..numStages).map { StageFormData(it) }
+                stages + (stages.size + 1..numberOfStages).map { StageFormData(it) }
             } else {
                 // Remove excess stages
-                stages.take(numStages)
+                stages.take(numberOfStages)
             }
         }
     }
@@ -135,22 +135,22 @@ fun AddEditRecipeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedTextField(
+                IntegerCounter(
                     value = numberOfStages,
                     onValueChange = { numberOfStages = it },
-                    label = { Text("Number of Stages") },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
+                    label = "Number of Stages",
+                    minValue = 1,
+                    maxValue = 5,
+                    modifier = Modifier.weight(1f)
                 )
 
-                OutlinedTextField(
+                IntegerCounter(
                     value = filteringDays,
                     onValueChange = { filteringDays = it },
-                    label = { Text("Filtering Day") },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
+                    label = "Filtering Day",
+                    minValue = 1,
+                    maxValue = 60,
+                    modifier = Modifier.weight(1f)
                 )
             }
 
@@ -189,17 +189,14 @@ fun AddEditRecipeScreen(
                 Button(
                     onClick = {
                         scope.launch {
-                            val numStages = numberOfStages.toIntOrNull() ?: 1
-                            val filterDays = filteringDays.toIntOrNull() ?: 7
-
                             if (recipeId != null && recipe != null) {
                                 // Update existing recipe
                                 repository.updateRecipe(
                                     recipe.copy(
                                         name = name,
                                         description = description,
-                                        numberOfStages = numStages,
-                                        filteringDays = filterDays,
+                                        numberOfStages = numberOfStages,
+                                        filteringDays = filteringDays,
                                         category = category,
                                         updatedAt = System.currentTimeMillis()
                                     )
@@ -226,8 +223,8 @@ fun AddEditRecipeScreen(
                                     Recipe(
                                         name = name,
                                         description = description,
-                                        numberOfStages = numStages,
-                                        filteringDays = filterDays,
+                                        numberOfStages = numberOfStages,
+                                        filteringDays = filteringDays,
                                         category = category
                                     )
                                 )
