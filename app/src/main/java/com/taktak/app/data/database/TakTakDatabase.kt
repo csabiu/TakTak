@@ -52,7 +52,7 @@ abstract class TakTakDatabase : RoomDatabase() {
                 super.onOpen(db)
                 INSTANCE?.let { database ->
                     applicationScope.launch {
-                        // Check if recipes table is empty and populate if needed
+                        // 레시피 테이블이 비어있으면 기본 레시피로 채우기
                         val recipeDao = database.recipeDao()
                         val recipeStageDao = database.recipeStageDao()
                         val recipeCount = recipeDao.getRecipeCount()
@@ -65,7 +65,7 @@ abstract class TakTakDatabase : RoomDatabase() {
         }
 
         private suspend fun populateDatabase(recipeDao: RecipeDao, recipeStageDao: RecipeStageDao) {
-            // === RECIPE 1: 기본 단양주 (Basic Single-Stage Makgeolli) ===
+            // === 레시피 1: 기본 단양주 ===
             val recipe1Id = recipeDao.insertRecipe(
                 Recipe(
                     name = "기본 단양주",
@@ -92,7 +92,7 @@ abstract class TakTakDatabase : RoomDatabase() {
                 )
             )
 
-            // === RECIPE 2: 전통 이양주 (Traditional Two-Stage Makgeolli) ===
+            // === 레시피 2: 전통 이양주 ===
             val recipe2Id = recipeDao.insertRecipe(
                 Recipe(
                     name = "전통 이양주",
@@ -134,7 +134,7 @@ abstract class TakTakDatabase : RoomDatabase() {
                 )
             )
 
-            // === RECIPE 3: 프리미엄 삼양주 (Premium Three-Stage Makgeolli) ===
+            // === 레시피 3: 프리미엄 삼양주 ===
             val recipe3Id = recipeDao.insertRecipe(
                 Recipe(
                     name = "프리미엄 삼양주",
