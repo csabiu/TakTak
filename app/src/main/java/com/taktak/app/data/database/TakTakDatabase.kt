@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.taktak.app.data.dao.*
 import com.taktak.app.data.model.*
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
         TastingNote::class,
         AlarmItem::class
     ],
-    version = 8,
+    version = 9,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -37,6 +38,109 @@ abstract class TakTakDatabase : RoomDatabase() {
         private var INSTANCE: TakTakDatabase? = null
 
         private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+        // 마이그레이션 8에서 9로: 기본 레시피를 한국어로 업데이트
+        private val MIGRATION_8_9 = object : Migration(8, 9) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // 레시피 1: 기본 단양주 업데이트
+                database.execSQL("""
+                    UPDATE recipes SET
+                        name = '기본 단양주',
+                        description = '초보자에게 완벽한 간단하고 빠른 막걸리입니다. 한 번의 발효 과정으로 만들어지며, 가볍고 약간 달콤한 쌀술이 됩니다.',
+                        category = '막걸리 - 단양주'
+                    WHERE name = 'Basic Single-Stage Makgeolli'
+                """)
+
+                database.execSQL("""
+                    UPDATE recipe_stages SET
+                        instructions = '1. 쌀을 물이 맑아질 때까지 깨끗이 씻기
+2. 찬물에 3-4시간 불리기
+3. 30-40분간 쪄서 완전히 익히기
+4. 실온(20-25°C)으로 식히기
+5. 소독된 발효 용기에 쌀, 부순 누룩, 물을 넣기
+6. 잘 섞고 통기성 있는 천으로 덮기
+7. 20-25°C에서 7일간 발효 (처음 3일은 매일 저어주기)'
+                    WHERE recipeId = (SELECT id FROM recipes WHERE name = '기본 단양주') AND stageNumber = 1
+                """)
+
+                // 레시피 2: 전통 이양주 업데이트
+                database.execSQL("""
+                    UPDATE recipes SET
+                        name = '전통 이양주',
+                        description = '더 세련되고 균형 잡힌 막걸리를 위한 전통 2단 발효법입니다. 첫 단계에서 밑술을 만들고, 이를 사용해 본 발효를 진행합니다. 깨끗한 맛과 높은 도수를 냅니다.',
+                        category = '막걸리 - 이양주'
+                    WHERE name = 'Traditional Two-Stage Makgeolli'
+                """)
+
+                database.execSQL("""
+                    UPDATE recipe_stages SET
+                        instructions = '1. 쌀 500g을 깨끗이 씻고 3-4시간 불리기
+2. 30분간 쪄서 완전히 익히기
+3. 실온(20-25°C)으로 식히기
+4. 소독된 용기에 식힌 쌀, 부순 누룩, 물을 섞기
+5. 잘 섞고 통기성 있는 천으로 덮기
+6. 20-25°C에서 보관하며 4-5일간 매일 한 번씩 저어주기'
+                    WHERE recipeId = (SELECT id FROM recipes WHERE name = '전통 이양주') AND stageNumber = 1
+                """)
+
+                database.execSQL("""
+                    UPDATE recipe_stages SET
+                        instructions = '1. 쌀 3kg (백미 2kg + 찹쌀 1kg) 준비: 씻고, 3-4시간 불리고, 35-40분 찌기
+2. 쌀을 완전히 실온으로 식히기
+3. 밑술에 식힌 쌀 넣기
+4. 부순 누룩과 물 넣기
+5. 모든 재료를 잘 섞기
+6. 덮고 20-25°C에서 발효
+7. 다음 8-9일간 매일 한 번씩 부드럽게 저어주기'
+                    WHERE recipeId = (SELECT id FROM recipes WHERE name = '전통 이양주') AND stageNumber = 2
+                """)
+
+                // 레시피 3: 프리미엄 삼양주 업데이트
+                database.execSQL("""
+                    UPDATE recipes SET
+                        name = '프리미엄 삼양주',
+                        description = '프리미엄 고급 막걸리를 위한 3단 발효법입니다. 가장 세련된 맛과 높은 도수, 뛰어난 균형을 만듭니다. 이 전통 방식은 역사적으로 왕실과 특별한 행사를 위해 사용되었습니다.',
+                        category = '막걸리 - 삼양주'
+                    WHERE name = 'Premium Three-Stage Makgeolli'
+                """)
+
+                database.execSQL("""
+                    UPDATE recipe_stages SET
+                        instructions = '1. 쌀 500g을 물이 맑아질 때까지 씻기
+2. 찬물에 3-4시간 불리기
+3. 30분간 찌기
+4. 깨끗한 쟁반에서 20-25°C로 식히기
+5. 소독된 용기에 쌀, 부순 누룩, 물을 넣기
+6. 잘 섞고 통기성 있는 천으로 덮기
+7. 20-25°C에서 발효하며 매일 한 번씩 저어주기'
+                    WHERE recipeId = (SELECT id FROM recipes WHERE name = '프리미엄 삼양주') AND stageNumber = 1
+                """)
+
+                database.execSQL("""
+                    UPDATE recipe_stages SET
+                        instructions = '1. 쌀 2kg (백미 1.5kg + 찹쌀 500g) 준비: 씻고, 3-4시간 불리고, 35분 찌기
+2. 쌀을 완전히 실온으로 식히기
+3. 1단계 밑술에 식힌 쌀 넣기
+4. 부순 누룩과 물 넣기
+5. 잘 섞고 덮어서 20-25°C에서 발효
+6. 처음 3일간 매일 저어주기'
+                    WHERE recipeId = (SELECT id FROM recipes WHERE name = '프리미엄 삼양주') AND stageNumber = 2
+                """)
+
+                database.execSQL("""
+                    UPDATE recipe_stages SET
+                        instructions = '1. 쌀 4.5kg (백미 3kg + 찹쌀 1.5kg) 준비: 씻고, 3-4시간 불리고, 40분 찌기
+2. 쌀을 완전히 식히기 - 성공의 핵심
+3. 발효 용기에 식힌 쌀 넣기 (더 큰 용기가 필요할 수 있음)
+4. 부순 누룩과 물 넣기
+5. 부드럽게 잘 섞기
+6. 덮고 20-25°C에서 발효
+7. 처음 5일간 매일 저어주기
+8. 거품이 멈추면 (약 21일째) 거르기'
+                    WHERE recipeId = (SELECT id FROM recipes WHERE name = '프리미엄 삼양주') AND stageNumber = 3
+                """)
+            }
+        }
 
         private val databaseCallback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
@@ -199,6 +303,7 @@ abstract class TakTakDatabase : RoomDatabase() {
                     TakTakDatabase::class.java,
                     "taktak_database"
                 )
+                    .addMigrations(MIGRATION_8_9)
                     .fallbackToDestructiveMigration()
                     .addCallback(databaseCallback)
                     .build()
