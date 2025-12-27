@@ -64,10 +64,10 @@ fun AddEditBatchScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (batchId == null) "Add Batch" else "Edit Batch") },
+                title = { Text(if (batchId == null) "발효중 추가" else "발효중 수정") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "뒤로")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -88,7 +88,7 @@ fun AddEditBatchScreen(
             TakTakTextField(
                 value = batchName,
                 onValueChange = { batchName = it },
-                label = "Batch Name"
+                label = "발효 이름"
             )
 
             ExposedDropdownMenuBox(
@@ -96,10 +96,10 @@ fun AddEditBatchScreen(
                 onExpandedChange = { expanded = it }
             ) {
                 OutlinedTextField(
-                    value = recipes.find { it.id == selectedRecipeId }?.name ?: "Select Recipe",
+                    value = recipes.find { it.id == selectedRecipeId }?.name ?: "레시피 선택",
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Recipe") },
+                    label = { Text("레시피") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -130,7 +130,7 @@ fun AddEditBatchScreen(
                         .replaceFirstChar { it.uppercase() },
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Status") },
+                    label = { Text("상태") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = statusExpanded) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -156,7 +156,7 @@ fun AddEditBatchScreen(
             TakTakTextField(
                 value = notes,
                 onValueChange = { notes = it },
-                label = "Notes",
+                label = "메모",
                 singleLine = false,
                 maxLines = 5
             )
@@ -169,7 +169,7 @@ fun AddEditBatchScreen(
                     onClick = onNavigateBack,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Cancel")
+                    Text("취소")
                 }
 
                 Button(
@@ -216,8 +216,8 @@ fun AddEditBatchScreen(
                                                 AlarmItem(
                                                     batchId = newBatchId,
                                                     alarmType = AlarmType.NEXT_STAGE,
-                                                    title = "Stage ${stage.stageNumber} - ${batchName}",
-                                                    description = "Add stage ${stage.stageNumber} ingredients: ${stage.waterAmountLiters}L water, ${stage.nurukAmountGrams}g nuruk",
+                                                    title = "단계 ${stage.stageNumber} - ${batchName}",
+                                                    description = "단계 ${stage.stageNumber} 재료 추가: 물 ${stage.waterAmountLiters}L, 누룩 ${stage.nurukAmountGrams}g",
                                                     scheduledTime = Instant.ofEpochMilli(scheduledTime),
                                                     isEnabled = true
                                                 )
@@ -231,8 +231,8 @@ fun AddEditBatchScreen(
                                         AlarmItem(
                                             batchId = newBatchId,
                                             alarmType = AlarmType.FILTER,
-                                            title = "Filter - ${batchName}",
-                                            description = "Time to filter your makgeolli",
+                                            title = "거르기 - ${batchName}",
+                                            description = "막걸리를 거를 시간입니다",
                                             scheduledTime = Instant.ofEpochMilli(filteringTime),
                                             isEnabled = true
                                         )
@@ -251,7 +251,7 @@ fun AddEditBatchScreen(
                     modifier = Modifier.weight(1f),
                     enabled = batchName.isNotBlank() && selectedRecipeId > 0
                 ) {
-                    Text("Save")
+                    Text("저장")
                 }
             }
         }

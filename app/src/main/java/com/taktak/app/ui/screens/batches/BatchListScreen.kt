@@ -32,7 +32,7 @@ fun BatchListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Batches") },
+                title = { Text("발효중") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -41,7 +41,7 @@ fun BatchListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddBatch) {
-                Icon(Icons.Default.Add, contentDescription = "Add Batch")
+                Icon(Icons.Default.Add, contentDescription = "발효 시작")
             }
         }
     ) { paddingValues ->
@@ -53,7 +53,7 @@ fun BatchListScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No batches yet. Start brewing!",
+                    text = "아직 발효중인 것이 없습니다. 발효를 시작하세요!",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -162,10 +162,10 @@ fun BatchItem(
 @Composable
 fun BatchStatusChip(status: BatchStatus) {
     val (color, text) = when (status) {
-        BatchStatus.FERMENTING -> MaterialTheme.colorScheme.tertiary to "Fermenting"
-        BatchStatus.AGING -> MaterialTheme.colorScheme.secondary to "Aging"
-        BatchStatus.COMPLETE -> MaterialTheme.colorScheme.primary to "Complete"
-        BatchStatus.FAILED -> MaterialTheme.colorScheme.error to "Failed"
+        BatchStatus.FERMENTING -> MaterialTheme.colorScheme.tertiary to "발효중"
+        BatchStatus.AGING -> MaterialTheme.colorScheme.secondary to "숙성중"
+        BatchStatus.COMPLETE -> MaterialTheme.colorScheme.primary to "완료"
+        BatchStatus.FAILED -> MaterialTheme.colorScheme.error to "실패"
     }
 
     Surface(

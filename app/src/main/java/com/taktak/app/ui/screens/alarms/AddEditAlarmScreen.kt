@@ -58,10 +58,10 @@ fun AddEditAlarmScreen(
         } else {
             // Set default title based on alarm type
             title = when (alarmType) {
-                AlarmType.NEXT_STAGE -> "Add Next Brewing Stage"
-                AlarmType.FILTER -> "Filter Brew"
-                AlarmType.CHECK_STATUS -> "Check Fermentation Status"
-                AlarmType.COMPLETION -> "Fermentation Complete"
+                AlarmType.NEXT_STAGE -> "다음 양조 단계 추가"
+                AlarmType.FILTER -> "양조액 거르기"
+                AlarmType.CHECK_STATUS -> "발효 상태 확인"
+                AlarmType.COMPLETION -> "발효 완료"
                 AlarmType.CUSTOM -> ""
             }
         }
@@ -70,10 +70,10 @@ fun AddEditAlarmScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (alarmId != null && alarmId > 0) "Edit Alarm" else "Add Alarm") },
+                title = { Text(if (alarmId != null && alarmId > 0) "알람 수정" else "알람 추가") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, "Back")
+                        Icon(Icons.Default.ArrowBack, "뒤로")
                     }
                 },
                 actions = {
@@ -138,7 +138,7 @@ fun AddEditAlarmScreen(
                         },
                         enabled = !isLoading && title.isNotBlank() && batchId != null
                     ) {
-                        Icon(Icons.Default.Check, "Save")
+                        Icon(Icons.Default.Check, "저장")
                     }
                 }
             )
@@ -161,7 +161,7 @@ fun AddEditAlarmScreen(
                     value = alarmType.name.replace("_", " "),
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Alarm Type") },
+                    label = { Text("알람 유형") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedAlarmType) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -179,10 +179,10 @@ fun AddEditAlarmScreen(
                                 alarmType = type
                                 // Update title based on type
                                 title = when (type) {
-                                    AlarmType.NEXT_STAGE -> "Add Next Brewing Stage"
-                                    AlarmType.FILTER -> "Filter Brew"
-                                    AlarmType.CHECK_STATUS -> "Check Fermentation Status"
-                                    AlarmType.COMPLETION -> "Fermentation Complete"
+                                    AlarmType.NEXT_STAGE -> "다음 양조 단계 추가"
+                                    AlarmType.FILTER -> "양조액 거르기"
+                                    AlarmType.CHECK_STATUS -> "발효 상태 확인"
+                                    AlarmType.COMPLETION -> "발효 완료"
                                     AlarmType.CUSTOM -> title.ifBlank { "" }
                                 }
                                 expandedAlarmType = false
@@ -196,7 +196,7 @@ fun AddEditAlarmScreen(
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
-                label = { Text("Alarm Title") },
+                label = { Text("알람 제목") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -204,7 +204,7 @@ fun AddEditAlarmScreen(
             OutlinedTextField(
                 value = description,
                 onValueChange = { description = it },
-                label = { Text("Description (Optional)") },
+                label = { Text("설명 (선택사항)") },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3
             )
@@ -214,7 +214,7 @@ fun AddEditAlarmScreen(
                 onClick = { showDatePicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Date: ${selectedDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"))}")
+                Text("날짜: ${selectedDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy"))}")
             }
 
             // Time Picker Button
@@ -222,7 +222,7 @@ fun AddEditAlarmScreen(
                 onClick = { showTimePicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Time: ${selectedTime.format(DateTimeFormatter.ofPattern("hh:mm a"))}")
+                Text("시간: ${selectedTime.format(DateTimeFormatter.ofPattern("hh:mm a"))}")
             }
 
             // Enabled Switch
@@ -230,7 +230,7 @@ fun AddEditAlarmScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Alarm Enabled", style = MaterialTheme.typography.bodyLarge)
+                Text("알람 활성화", style = MaterialTheme.typography.bodyLarge)
                 Switch(
                     checked = isEnabled,
                     onCheckedChange = { isEnabled = it }
@@ -258,12 +258,12 @@ fun AddEditAlarmScreen(
                         }
                         showDatePicker = false
                     }) {
-                        Text("OK")
+                        Text("확인")
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDatePicker = false }) {
-                        Text("Cancel")
+                        Text("취소")
                     }
                 }
             ) {
@@ -284,12 +284,12 @@ fun AddEditAlarmScreen(
                         selectedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
                         showTimePicker = false
                     }) {
-                        Text("OK")
+                        Text("확인")
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showTimePicker = false }) {
-                        Text("Cancel")
+                        Text("취소")
                     }
                 },
                 text = {

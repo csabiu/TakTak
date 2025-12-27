@@ -42,15 +42,15 @@ fun BatchDetailScreen(
                     title = { Text(currentBatch.batchName) },
                     navigationIcon = {
                         IconButton(onClick = onNavigateBack) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.Default.ArrowBack, contentDescription = "뒤로")
                         }
                     },
                     actions = {
                         IconButton(onClick = { onEditBatch(batchId) }) {
-                            Icon(Icons.Default.Edit, contentDescription = "Edit")
+                            Icon(Icons.Default.Edit, contentDescription = "수정")
                         }
                         IconButton(onClick = { showDeleteDialog = true }) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete")
+                            Icon(Icons.Default.Delete, contentDescription = "삭제")
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -63,7 +63,7 @@ fun BatchDetailScreen(
                 ExtendedFloatingActionButton(
                     onClick = { onAddTastingNote(batchId) },
                     icon = { Icon(Icons.Default.WineBar, contentDescription = null) },
-                    text = { Text("Add Tasting") }
+                    text = { Text("시음 추가") }
                 )
             }
         ) { paddingValues ->
@@ -87,7 +87,7 @@ fun BatchDetailScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Status",
+                                text = "상태",
                                 style = MaterialTheme.typography.labelSmall
                             )
                             BatchStatusChip(status = currentBatch.status)
@@ -99,7 +99,7 @@ fun BatchDetailScreen(
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Recipe",
+                                text = "레시피",
                                 style = MaterialTheme.typography.titleSmall
                             )
                             Spacer(modifier = Modifier.height(8.dp))
@@ -114,7 +114,7 @@ fun BatchDetailScreen(
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Timeline",
+                            text = "타임라인",
                             style = MaterialTheme.typography.titleSmall
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -124,7 +124,7 @@ fun BatchDetailScreen(
                         ) {
                             Column {
                                 Text(
-                                    text = "Start Date",
+                                    text = "시작일",
                                     style = MaterialTheme.typography.labelSmall
                                 )
                                 Text(
@@ -134,7 +134,7 @@ fun BatchDetailScreen(
                             }
                             Column {
                                 Text(
-                                    text = "Expected End",
+                                    text = "예상 종료일",
                                     style = MaterialTheme.typography.labelSmall
                                 )
                                 Text(
@@ -154,18 +154,18 @@ fun BatchDetailScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Alarms",
+                                text = "알람",
                                 style = MaterialTheme.typography.titleSmall
                             )
                             IconButton(onClick = { onAddAlarm(batchId) }) {
-                                Icon(Icons.Default.Add, contentDescription = "Add Alarm")
+                                Icon(Icons.Default.Add, contentDescription = "알람 추가")
                             }
                         }
                         Spacer(modifier = Modifier.height(8.dp))
 
                         if (alarms.isEmpty()) {
                             Text(
-                                text = "No alarms set. Add an alarm to be reminded about important brewing steps.",
+                                text = "설정된 알람이 없습니다. 중요한 양조 단계를 알림 받으려면 알람을 추가하세요.",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -194,20 +194,20 @@ fun BatchDetailScreen(
                                         )
                                         if (alarm.isTriggered) {
                                             Text(
-                                                text = "Triggered",
+                                                text = "발동됨",
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.tertiary
                                             )
                                         } else if (!alarm.isEnabled) {
                                             Text(
-                                                text = "Disabled",
+                                                text = "비활성화",
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.error
                                             )
                                         }
                                     }
                                     IconButton(onClick = { onEditAlarm(alarm.id) }) {
-                                        Icon(Icons.Default.Edit, contentDescription = "Edit Alarm")
+                                        Icon(Icons.Default.Edit, contentDescription = "알람 수정")
                                     }
                                 }
                             }
@@ -219,7 +219,7 @@ fun BatchDetailScreen(
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Notes",
+                                text = "메모",
                                 style = MaterialTheme.typography.titleSmall
                             )
                             Spacer(modifier = Modifier.height(8.dp))
@@ -236,8 +236,8 @@ fun BatchDetailScreen(
         if (showDeleteDialog) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
-                title = { Text("Delete Batch") },
-                text = { Text("Are you sure you want to delete this batch? This action cannot be undone.") },
+                title = { Text("발효중 삭제") },
+                text = { Text("이 발효를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.") },
                 confirmButton = {
                     TextButton(
                         onClick = {
@@ -247,12 +247,12 @@ fun BatchDetailScreen(
                             }
                         }
                     ) {
-                        Text("Delete")
+                        Text("삭제")
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDeleteDialog = false }) {
-                        Text("Cancel")
+                        Text("취소")
                     }
                 }
             )
