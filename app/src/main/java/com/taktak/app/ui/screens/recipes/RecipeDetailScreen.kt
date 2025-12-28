@@ -19,15 +19,33 @@ fun RecipeDetailScreen(
     repository: TakTakRepository,
     onNavigateBack: () -> Unit,
     onEditRecipe: (Long) -> Unit,
-    onStartBatch: (Long) -> Unit
+    onStartBatch: (Long) -> Unit,
+    onViewRecipe: (Long) -> Unit = {}
 ) {
     val recipe by repository.getRecipeById(recipeId).collectAsState(initial = null)
     val stages by repository.getStagesForRecipe(recipeId).collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var copiedRecipeId by remember { mutableStateOf<Long?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Show snackbar when recipe is copied
+    LaunchedEffect(copiedRecipeId) {
+        copiedRecipeId?.let { newId ->
+            val result = snackbarHostState.showSnackbar(
+                message = "레시피가 복사되었습니다",
+                actionLabel = "보기",
+                duration = SnackbarDuration.Long
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                onViewRecipe(newId)
+            }
+        }
+    }
 
     recipe?.let { currentRecipe ->
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopAppBar(
                     title = { Text(currentRecipe.name) },
@@ -37,6 +55,20 @@ fun RecipeDetailScreen(
                         }
                     },
                     actions = {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    try {
+                                        val newRecipeId = repository.copyRecipe(recipeId)
+                                        copiedRecipeId = newRecipeId
+                                    } catch (e: Exception) {
+                                        // Handle error silently or show error message
+                                    }
+                                }
+                            }
+                        ) {
+                            Icon(Icons.Default.ContentCopy, contentDescription = "복사")
+                        }
                         IconButton(onClick = { onEditRecipe(recipeId) }) {
                             Icon(Icons.Default.Edit, contentDescription = "수정")
                         }
