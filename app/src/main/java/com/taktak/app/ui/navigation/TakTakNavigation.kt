@@ -53,6 +53,9 @@ fun TakTakNavigation(
                 },
                 onStartBatch = { id ->
                     navController.navigate(Screen.AddEditBatch.createRoute())
+                },
+                onViewRecipe = { id ->
+                    navController.navigate(Screen.RecipeDetail.createRoute(id))
                 }
             )
         }

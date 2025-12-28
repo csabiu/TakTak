@@ -19,6 +19,38 @@ class TakTakRepository(
     suspend fun deleteRecipe(recipe: Recipe) = recipeDao.deleteRecipe(recipe)
     fun searchRecipes(query: String): Flow<List<Recipe>> = recipeDao.searchRecipes(query)
 
+    suspend fun copyRecipe(recipeId: Long): Long {
+        // Get the original recipe and its stages
+        val originalRecipe = recipeDao.getRecipeByIdSync(recipeId) ?: throw IllegalArgumentException("Recipe not found")
+        val originalStages = recipeStageDao.getStagesForRecipeSync(recipeId)
+
+        // Create a new recipe with a modified name
+        val copiedRecipe = originalRecipe.copy(
+            id = 0, // Let Room auto-generate a new ID
+            name = "${originalRecipe.name} (복사본)",
+            createdAt = System.currentTimeMillis(),
+            updatedAt = System.currentTimeMillis()
+        )
+
+        // Insert the new recipe and get its ID
+        val newRecipeId = recipeDao.insertRecipe(copiedRecipe)
+
+        // Copy all stages with the new recipe ID
+        val copiedStages = originalStages.map { stage ->
+            stage.copy(
+                id = 0, // Let Room auto-generate a new ID
+                recipeId = newRecipeId,
+                createdAt = System.currentTimeMillis(),
+                updatedAt = System.currentTimeMillis()
+            )
+        }
+
+        // Insert all copied stages
+        recipeStageDao.insertStages(copiedStages)
+
+        return newRecipeId
+    }
+
     // Recipe stage operations
     fun getStagesForRecipe(recipeId: Long): Flow<List<RecipeStage>> = recipeStageDao.getStagesForRecipe(recipeId)
     suspend fun getStagesForRecipeSync(recipeId: Long): List<RecipeStage> = recipeStageDao.getStagesForRecipeSync(recipeId)
